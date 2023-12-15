@@ -12,6 +12,7 @@ import {
 import "@refinedev/antd/dist/reset.css";
 
 import nestjsxCrudDataProvider from "@refinedev/nestjsx-crud";
+import customDataProvider from "./dataProvider";
 import routerBindings, {
   CatchAllNavigate,
   DocumentTitleHandler,
@@ -43,16 +44,17 @@ import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import { UserList } from "./pages/users";
-import { TokenList } from "./pages/tokens";
+import { TokenList, TokenShow } from "./pages/tokens";
+import { UserShow } from "./pages/users/show";
 
-import { AntdListInferencer } from "@refinedev/inferencer/antd";
+import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
 
 function App() {
   const { t, i18n } = useTranslation();
 
   //const API_URL = "https://api.fake-rest.refine.dev";
   const API_URL = "https://6579378af08799dc80468509.mockapi.io";
-  const dataProvider = nestjsxCrudDataProvider(API_URL);
+  const dataProvider = customDataProvider(API_URL);
 
   const i18nProvider = {
     translate: (key: string, params: object) => t(key, params),
@@ -76,6 +78,7 @@ function App() {
                   {
                     name: "tokens",
                     list: "/tokens",
+                    show: "/tokens/:id",
                     meta: {
                       label: "Update token info",
                       icon: <DollarOutlined />,
@@ -85,6 +88,7 @@ function App() {
                     name: "users",
                     list: "/users",
                     edit: "/users/:id",
+                    show: "/users/:id",
                     meta: {
                       label: "Update user role",
                       icon: <UserOutlined />,
@@ -153,9 +157,11 @@ function App() {
                     />
                     <Route path="/tokens">
                       <Route index element={<TokenList />} />
+                      <Route path=":id" element={<TokenShow />} />
                     </Route>
                     <Route path="/users">
                       <Route index element={<UserList />} />
+                      <Route path=":id" element={<UserShow />} />
                     </Route>
                     <Route path="/blog-posts">
                       <Route index element={<BlogPostList />} />

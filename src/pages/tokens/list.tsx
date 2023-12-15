@@ -3,13 +3,23 @@ import {
   IResourceComponentsProps,
   BaseRecord,
   useTranslate,
+  useList,
+  getDefaultFilter,
 } from "@refinedev/core";
-import { useTable, List, DateField } from "@refinedev/antd";
-import { Table, Space, Button, Tag } from "antd";
+import {
+  useTable,
+  List,
+  DateField,
+  FilterDropdown,
+  useSelect,
+  ShowButton,
+} from "@refinedev/antd";
+import { Table, Space, Button, Tag, Select } from "antd";
 
 export const TokenList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
-  const { tableProps } = useTable({
+
+  const { tableProps, filters } = useTable({
     syncWithLocation: true,
   });
 
@@ -21,10 +31,19 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
         return "warning";
       case "Updated":
         return "success";
+      case "Refused":
+        return "error";
       default:
         break;
     }
   };
+
+  const statusSelectOptions = [
+    { value: "Pending", label: "Pending" },
+    { value: "Verified", label: "Verified" },
+    { value: "Updated", label: "Updated" },
+    { value: "Refused", label: "Refused" },
+  ];
 
   return (
     <List title="TOKEN INFO UPDATE REQUESTS">
@@ -33,9 +52,17 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="status"
           title={translate("tokens.fields.status")}
           render={(value: any) => (
-            <>
-              <Tag color={getStatusColor(value)}>{value}</Tag>
-            </>
+            <Tag color={getStatusColor(value)}>{value}</Tag>
+          )}
+          defaultFilteredValue={getDefaultFilter("status", filters)}
+          filterDropdown={(props) => (
+            <FilterDropdown {...props}>
+              <Select
+                style={{ minWidth: 200 }}
+                placeholder="Select Status"
+                options={statusSelectOptions}
+              />
+            </FilterDropdown>
           )}
         />
 
@@ -43,7 +70,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="timestamp"
           title={translate("tokens.fields.timestamp")}
           render={(value: any) => (
-            <DateField value={value * 1000} format="d/m/YYYY HH:mm:ss" />
+            <DateField value={value * 1000} format="D/M/YYYY HH:mm:ss" />
           )}
         />
 
@@ -68,7 +95,11 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
-            <Button type="default">View</Button>
+            <>
+              <ShowButton icon={false} recordItemId={record.id}>
+                View
+              </ShowButton>
+            </>
           )}
         />
       </Table>
