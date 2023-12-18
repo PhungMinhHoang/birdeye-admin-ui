@@ -1,6 +1,14 @@
-import { DownOutlined } from "@ant-design/icons";
+import { DownOutlined, LogoutOutlined } from "@ant-design/icons";
 import type { RefineThemedLayoutV2HeaderProps } from "@refinedev/antd";
-import { useGetIdentity, useGetLocale, useSetLocale } from "@refinedev/core";
+import {
+  useActiveAuthProvider,
+  useGetIdentity,
+  useGetLocale,
+  useLogout,
+  useSetLocale,
+  useTranslate,
+  useWarnAboutChange,
+} from "@refinedev/core";
 import {
   Avatar,
   Button,
@@ -50,6 +58,39 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
       label: lang === "en" ? "English" : "German",
     }));
 
+  const { warnWhen, setWarnWhen } = useWarnAboutChange();
+  const authProvider = useActiveAuthProvider();
+  const { mutate: mutateLogout } = useLogout({
+    v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
+  });
+  const translate = useTranslate();
+  const handleLogout = () => {
+    if (warnWhen) {
+      const confirm = window.confirm(
+        translate(
+          "warnWhenUnsavedChanges",
+          "Are you sure you want to leave? You have unsaved changes."
+        )
+      );
+
+      if (confirm) {
+        setWarnWhen(false);
+        mutateLogout();
+      }
+    } else {
+      mutateLogout();
+    }
+  };
+
+  const userMenuItems: MenuProps["items"] = [
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: handleLogout,
+    },
+  ];
+
   const headerStyles: React.CSSProperties = {
     backgroundColor: token.colorBgElevated,
     display: "flex",
@@ -82,16 +123,22 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
             </Space>
           </Button>
         </Dropdown> */}
-
-        <Switch
+        {/* <Switch
           checkedChildren="🌛"
           unCheckedChildren="🔆"
           onChange={() => setMode(mode === "light" ? "dark" : "light")}
           defaultChecked={mode === "dark"}
-        />
-        <Space style={{ marginLeft: "8px" }} size="middle">
-          {user?.name && <Text strong>{user.name}</Text>}
-        </Space>
+        /> */}
+
+        <Dropdown
+          menu={{
+            items: userMenuItems,
+          }}
+        >
+          <div style={{ cursor: "pointer" }}>
+            {user?.name && <Text strong>{user.name}</Text>}
+          </div>
+        </Dropdown>
       </Space>
     </AntdLayout.Header>
   );

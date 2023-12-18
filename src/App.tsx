@@ -10,6 +10,7 @@ import {
   useNotificationProvider,
 } from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
+import { CustomSider } from "./components/sider";
 
 import nestjsxCrudDataProvider from "@refinedev/nestjsx-crud";
 import customDataProvider from "./dataProvider";
@@ -138,7 +139,7 @@ function App() {
                       >
                         <ThemedLayoutV2
                           Header={() => <Header sticky />}
-                          Sider={(props) => <ThemedSiderV2 {...props} fixed />}
+                          Sider={(props) => <CustomSider {...props} fixed />}
                           Title={({ collapsed }) => (
                             <ThemedTitleV2
                               collapsed={collapsed}
