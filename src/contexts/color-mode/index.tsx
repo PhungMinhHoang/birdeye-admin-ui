@@ -22,7 +22,7 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
   //const systemPreference = isSystemPreferenceDark ? "dark" : "light";
   const systemPreference = "dark";
   const [mode, setMode] = useState(
-    colorModeFromLocalStorage || systemPreference  //set default mode color
+    colorModeFromLocalStorage || systemPreference //set default mode color
   );
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
       <ConfigProvider
         // you can change the theme colors here. example: ...RefineThemes.Magenta,
         theme={{
-          ...RefineThemes.Blue,
+          ...RefineThemes.Orange,
           algorithm: mode === "light" ? defaultAlgorithm : darkAlgorithm,
         }}
       >

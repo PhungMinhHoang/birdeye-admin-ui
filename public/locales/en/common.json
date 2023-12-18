@@ -142,8 +142,8 @@
     }
   },
   "documentTitle": {
-    "default": "refine",
-    "suffix": " | refine",
+    "default": "birdeye",
+    "suffix": " | birdeye",
     "blog_posts": {
       "list": "Blog Posts | refine",
       "show": "#{{id}} Show Blog Post | refine",
