@@ -19,7 +19,6 @@ export default (
     const url = `${apiUrl}/${resource}`;
 
     let query = RequestQueryBuilder.create();
-
     query = handleFilter(query, filters);
     query = handleJoin(query, meta?.join);
     query = handlePagination(query, pagination);
