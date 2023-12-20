@@ -26,6 +26,8 @@ import {
   Flex,
   Typography,
 } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { CreateModal } from "../../components/rewards/CreateModal";
 
 const RegistrationList: React.FC<any> = ({ reward }: { reward: any }) => {
   const { tableProps, setFilters } = useTable({
@@ -104,19 +106,42 @@ export const RewardList: React.FC<IResourceComponentsProps> = () => {
 
   const [selectedReward, setSelectedReward]: any = useState();
 
-  return (
-    <List canCreate>
-      <Form {...searchFormProps}>
-        <Space>
-          <Form.Item name="name">
-            <Input placeholder="Search name" />
-          </Form.Item>
+  const {
+    show: showCreateModal,
+    close: closeCreateModal,
+    modalProps: createModalProps,
+  } = useModal({
+    modalProps: {
+      title: "CREATE NEW REWARD",
+      width: 800,
+      footer: null,
+      maskClosable: false,
+    },
+  });
 
-          <Form.Item>
-            <Button htmlType="submit">Search</Button>
-          </Form.Item>
-        </Space>
-      </Form>
+  return (
+    <List>
+      <Flex justify="space-between">
+        <Form {...searchFormProps}>
+          <Space>
+            <Form.Item name="name">
+              <Input placeholder="Search name" />
+            </Form.Item>
+
+            <Form.Item>
+              <Button htmlType="submit">Search</Button>
+            </Form.Item>
+          </Space>
+        </Form>
+
+        <Button
+          type="primary"
+          icon={<PlusCircleOutlined />}
+          onClick={showCreateModal}
+        >
+          Create new reward
+        </Button>
+      </Flex>
 
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="name" title="Name"></Table.Column>
@@ -162,6 +187,10 @@ export const RewardList: React.FC<IResourceComponentsProps> = () => {
 
       <Modal {...modalProps}>
         <RegistrationList reward={selectedReward} />
+      </Modal>
+
+      <Modal {...createModalProps}>
+        <CreateModal />
       </Modal>
     </List>
   );

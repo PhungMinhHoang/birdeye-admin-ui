@@ -99,6 +99,7 @@ function App() {
                   {
                     name: "rewards",
                     list: "/rewards",
+                    create: "/rewards/create",
                     icon: <GiftOutlined />,
                   },
 
@@ -167,6 +168,7 @@ function App() {
                     </Route>
                     <Route path="/rewards">
                       <Route index element={<RewardList />} />
+                      <Route path="create" element={<AntdInferencer />} />
                       {/* <Route path=":id" element={<UserShow />} /> */}
                     </Route>
                     <Route path="/blog-posts">
