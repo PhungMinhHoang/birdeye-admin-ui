@@ -47,7 +47,7 @@ import { Register } from "./pages/register";
 import { UserList } from "./pages/users";
 import { TokenList, TokenShow } from "./pages/tokens";
 import { UserShow } from "./pages/users";
-import { RewardList } from "./pages/rewards";
+import { RewardList, RewardCreate } from "./pages/rewards";
 
 import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
 
@@ -168,7 +168,7 @@ function App() {
                     </Route>
                     <Route path="/rewards">
                       <Route index element={<RewardList />} />
-                      <Route path="create" element={<AntdInferencer />} />
+                      <Route path="create" element={<RewardCreate />} />
                       {/* <Route path=":id" element={<UserShow />} /> */}
                     </Route>
                     <Route path="/blog-posts">

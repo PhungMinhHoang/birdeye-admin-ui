@@ -108,12 +108,6 @@ export const TokenShow: React.FC<IResourceComponentsProps> = () => {
       isLoading={isLoading}
       canEdit={false}
       footerButtons={<FooterButton status={record.status} />}
-      footerButtonProps={{
-        style: {
-          width: "100%",
-          padding: "12px 24px",
-        },
-      }}
     >
       <Title level={5}>{translate("tokens.fields.status")}</Title>
       <TagField
