@@ -50,13 +50,14 @@ import { UserShow } from "./pages/users";
 import { RewardList, RewardCreate } from "./pages/rewards";
 
 import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
+import axiosInstance from "./axios";
 
 function App() {
   const { t, i18n } = useTranslation();
 
   //const API_URL = "https://api.fake-rest.refine.dev";
   const API_URL = "https://6579378af08799dc80468509.mockapi.io";
-  const dataProvider = customDataProvider(API_URL);
+  const dataProvider = customDataProvider(API_URL, axiosInstance);
 
   const i18nProvider = {
     translate: (key: string, params: object) => t(key, params),
