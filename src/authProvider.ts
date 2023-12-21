@@ -1,6 +1,6 @@
 import { AuthBindings } from "@refinedev/core";
 import axios from "./axios";
-import { REFRESH_TOKEN_KEY, TOKEN_KEY } from "./constants";
+import { USER_INFO, REFRESH_TOKEN_KEY, TOKEN_KEY } from "./constants";
 
 export const authProvider: AuthBindings = {
   login: async ({ username, password }) => {
@@ -12,9 +12,17 @@ export const authProvider: AuthBindings = {
 
       const { accessToken, refreshToken } = response.data;
 
-      localStorage.setItem("auth", JSON.stringify({ name: "Hoang" }));
       localStorage.setItem(TOKEN_KEY, accessToken);
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+
+      try {
+        const userResponse = await axios.get("/auth/info");
+        if (userResponse.data) {
+          localStorage.setItem(USER_INFO, JSON.stringify(userResponse.data));
+        }
+      } catch (error) {
+        console.log("Fetching user info error: ", error);
+      }
 
       return {
         success: true,
@@ -33,6 +41,7 @@ export const authProvider: AuthBindings = {
   logout: async () => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(USER_INFO);
 
     return {
       success: true,
@@ -54,7 +63,7 @@ export const authProvider: AuthBindings = {
   },
   getPermissions: async () => null,
   getIdentity: async () => {
-    let user = localStorage.getItem("auth");
+    let user = localStorage.getItem(USER_INFO);
 
     if (!user) return null;
 

@@ -28,9 +28,8 @@ const { Text } = Typography;
 const { useToken } = theme;
 
 type IUser = {
-  id: number;
-  name: string;
-  avatar: string;
+  _id: number;
+  username: string;
 };
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
@@ -136,7 +135,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
           }}
         >
           <div style={{ cursor: "pointer" }}>
-            {user?.name && <Text strong>{user.name}</Text>}
+            {user?.username && <Text strong>{user.username}</Text>}
           </div>
         </Dropdown>
       </Space>
