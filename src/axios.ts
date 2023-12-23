@@ -4,7 +4,7 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { REFRESH_TOKEN_KEY, TOKEN_KEY } from "./constants";
 
 const axiosInstance = axios.create({
-  baseURL: "https://be-intranet.hieuht.dev",
+  baseURL: "https://internal.birdeye.so",
 });
 
 // Use interceptor to inject the token to requests

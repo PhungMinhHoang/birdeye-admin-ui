@@ -21,6 +21,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
 
   const { tableProps, filters } = useTable({
     syncWithLocation: true,
+    resource: "token/updateInfoRequests",
   });
 
   const getStatusColor = (status: string) => {
