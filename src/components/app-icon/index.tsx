@@ -26,8 +26,8 @@ export const AppIcon: React.FC = () => {
           y2="-18.5146"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FFCE00" />
-          <stop offset="1" stop-color="#FF002C" />
+          <stop stopColor="#FFCE00" />
+          <stop offset="1" stopColor="#FF002C" />
         </linearGradient>
       </defs>
     </svg>

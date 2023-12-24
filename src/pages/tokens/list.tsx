@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   IResourceComponentsProps,
   BaseRecord,
@@ -13,8 +13,12 @@ import {
   FilterDropdown,
   useSelect,
   ShowButton,
+  useModal,
 } from "@refinedev/antd";
-import { Table, Space, Button, Tag, Select } from "antd";
+import { Table, Space, Button, Tag, Select, Typography, Modal } from "antd";
+import ViewTokenModal from "../../components/tokens/ViewTokenModal";
+
+const { Link } = Typography;
 
 export const TokenList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
@@ -22,6 +26,9 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, filters } = useTable({
     syncWithLocation: true,
     resource: "token/updateInfoRequests",
+    pagination: {
+      mode: "client",
+    },
   });
 
   const getStatusColor = (status: string) => {
@@ -45,6 +52,23 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
     { value: "Updated", label: "Updated" },
     { value: "Refused", label: "Refused" },
   ];
+
+  const {
+    modalProps: viewModalProps,
+    show: showViewModal,
+    close: closeViewModal,
+  } = useModal({
+    modalProps: {
+      title: "Token info update request",
+      width: 1000,
+      footer: null,
+    },
+  });
+  const [token, setToken] = useState<BaseRecord>();
+  const handleView = (record: BaseRecord) => {
+    setToken(record);
+    showViewModal();
+  };
 
   return (
     <List title="TOKEN INFO UPDATE REQUESTS">
@@ -90,20 +114,27 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
         <Table.Column
           dataIndex="paymentEvidence"
           title={translate("tokens.fields.paymentEvidence")}
+          render={(value) => (
+            <>
+              <Link ellipsis style={{ width: "200px" }} target="_blank">
+                {value}
+              </Link>
+            </>
+          )}
         />
 
         <Table.Column
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
-            <>
-              <ShowButton icon={false} recordItemId={record.id}>
-                View
-              </ShowButton>
-            </>
+            <Button onClick={() => handleView(record)}>View</Button>
           )}
         />
       </Table>
+
+      <Modal {...viewModalProps}>
+        <ViewTokenModal token={token} />
+      </Modal>
     </List>
   );
 };

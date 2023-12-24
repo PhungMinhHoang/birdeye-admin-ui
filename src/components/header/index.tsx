@@ -44,18 +44,18 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
 
   const currentLocale = locale();
 
-  const menuItems: MenuProps["items"] = [...(i18n.languages || [])]
-    .sort()
-    .map((lang: string) => ({
-      key: lang,
-      onClick: () => changeLanguage(lang),
-      icon: (
-        <span style={{ marginRight: 8 }}>
-          <Avatar size={16} src={`/images/flags/${lang}.svg`} />
-        </span>
-      ),
-      label: lang === "en" ? "English" : "German",
-    }));
+  // const menuItems: MenuProps["items"] = [...(i18n.languages || [])]
+  //   .sort()
+  //   .map((lang: string) => ({
+  //     key: lang,
+  //     onClick: () => changeLanguage(lang),
+  //     icon: (
+  //       <span style={{ marginRight: 8 }}>
+  //         <Avatar size={16} src={`/images/flags/${lang}.svg`} />
+  //       </span>
+  //     ),
+  //     label: lang === "en" ? "English" : "German",
+  //   }));
 
   const { warnWhen, setWarnWhen } = useWarnAboutChange();
   const authProvider = useActiveAuthProvider();

@@ -14,7 +14,7 @@ import {
 import "./styles.css";
 import { AppIcon } from "../../components/app-icon";
 
-const { Text, Title } = Typography;
+const { Title } = Typography;
 
 export interface ILoginForm {
   username: string;
@@ -54,6 +54,10 @@ export const Login: React.FC = () => {
                   login(values);
                 }}
                 requiredMark={false}
+                initialValues={{
+                  username: "khanguyen",
+                  password: "birdeyeso",
+                }}
               >
                 <Form.Item
                   name="username"
