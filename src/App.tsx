@@ -175,7 +175,7 @@ function App() {
                 </Routes>
 
                 <RefineKbar />
-                <UnsavedChangesNotifier />
+                {/* <UnsavedChangesNotifier /> */}
                 <DocumentTitleHandler />
               </Refine>
               <DevtoolsPanel />

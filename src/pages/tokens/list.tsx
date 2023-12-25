@@ -17,11 +17,14 @@ import {
 } from "@refinedev/antd";
 import { Table, Space, Button, Tag, Select, Typography, Modal } from "antd";
 import ViewTokenModal from "../../components/tokens/ViewTokenModal";
+import { useAuth } from "../../hooks";
+import { $permissions } from "../../constants";
 
 const { Link } = Typography;
 
 export const TokenList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
+  const { canAccess } = useAuth();
 
   const { tableProps, filters } = useTable({
     syncWithLocation: true,
@@ -129,7 +132,11 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
-            <Button onClick={() => handleView(record)}>View</Button>
+            <>
+              {canAccess($permissions.VERIFY_TOKEN_INFO_REQUEST) && (
+                <Button onClick={() => handleView(record)}>View</Button>
+              )}
+            </>
           )}
         />
       </Table>
