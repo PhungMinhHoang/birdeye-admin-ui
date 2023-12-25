@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   IResourceComponentsProps,
   BaseRecord,
   useTranslate,
   getDefaultFilter,
+  useList,
 } from "@refinedev/core";
 import {
   useTable,
@@ -13,120 +14,135 @@ import {
   ShowButton,
   DeleteButton,
   FilterDropdown,
+  useModal,
+  useForm,
 } from "@refinedev/antd";
-import { Table, Space, Form, Button, Input, Radio } from "antd";
+import {
+  Table,
+  Space,
+  Form,
+  Button,
+  Input,
+  Radio,
+  Modal,
+  Flex,
+  Typography,
+} from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { redirect } from "react-router-dom";
+
+type Role = {
+  _id: string;
+  name: string;
+};
 
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
-  const { tableProps, searchFormProps, filters } = useTable({
+
+  const { tableProps, setFilters } = useTable({
     syncWithLocation: true,
-    onSearch: (values: any) => {
-      return [
-        {
-          field: "email",
-          operator: "contains",
-          value: values.email,
-        },
-      ];
+  });
+
+  const { data: roles } = useList<Role>({
+    resource: "roles",
+  });
+
+  const getRoleNames = (ids: string): string => {
+    if (!roles?.total) return "";
+
+    return roles.data.reduce((pre, cur) => {
+      if (ids.includes(cur._id)) {
+        if (pre) pre += ", ";
+        pre += cur.name;
+      }
+
+      return pre;
+    }, "");
+  };
+
+  const {
+    modalProps,
+    show: showModal,
+    close: closeModal,
+  } = useModal({
+    modalProps: {
+      title: "Create new admin",
+      maskClosable: false,
     },
   });
 
+  const handleClodeModal = () => {
+    closeModal();
+    form.resetFields();
+  };
+
+  const { formProps, formLoading, form } = useForm({
+    resource: "admins",
+    action: "create",
+  });
+
   return (
-    <List>
-      <Form {...searchFormProps}>
-        <Space>
-          <Form.Item name="email">
-            <Input placeholder="Search user email" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button htmlType="submit">Search</Button>
-          </Form.Item>
-        </Space>
-      </Form>
+    <List canCreate createButtonProps={{ onClick: showModal }}>
       <Table {...tableProps} rowKey="id">
-        <Table.Column dataIndex="email" title="Email" />
+        <Table.Column dataIndex="username" title="Username"></Table.Column>
+
         <Table.Column
-          dataIndex="signedUp"
-          title="Signed up"
+          dataIndex="roleIds"
+          title="Role"
+          render={(value: any) => getRoleNames(value)}
+        />
+
+        <Table.Column
+          dataIndex="createdAt"
+          title="Created"
           render={(value: any) => (
-            <DateField value={value * 1000} format="D/M/YYYY HH:mm:ss" />
-          )}
-        />
-        <Table.Column dataIndex="status" title="Status" />
-
-        <Table.Column
-          dataIndex="userType"
-          title="User Type"
-          render={(_, record: BaseRecord) =>
-            record.proExpiration ? "Pro" : "Normal"
-          }
-          defaultFilteredValue={getDefaultFilter("userType", filters)}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Radio.Group>
-                <Radio value="Pro">Pro User</Radio>
-                <Radio value="Normal">Normal User</Radio>
-              </Radio.Group>
-            </FilterDropdown>
+            <DateField value={value} format="D/M/YYYY HH:mm:ss" />
           )}
         />
 
-        <Table.Column
-          dataIndex="proExpiration"
-          title="PRO Expiration"
-          render={(_, record: BaseRecord) => (
-            <>
-              {record.proExpiration && (
-                <DateField
-                  value={record.proExpiration * 1000}
-                  format="D/M/YYYY HH:mm:ss"
-                />
-              )}
-            </>
-          )}
-        />
-        <Table.Column
-          dataIndex="bdsType"
-          title="BDS Type"
-          defaultFilteredValue={getDefaultFilter("bdsType", filters)}
-          filterDropdown={(props) => (
-            <FilterDropdown {...props}>
-              <Radio.Group>
-                <Radio value="Standard">Standard</Radio>
-                <Radio value="Business">Business</Radio>
-                <Radio value="Premium">Premium</Radio>
-              </Radio.Group>
-            </FilterDropdown>
-          )}
-        />
-        <Table.Column
-          dataIndex="bdsExpiration"
-          title="BDS Expiration"
-          render={(_, record: BaseRecord) => (
-            <>
-              {record.bdsExpiration && (
-                <DateField
-                  value={record.bdsExpiration * 1000}
-                  format="D/M/YYYY HH:mm:ss"
-                />
-              )}
-            </>
-          )}
-        />
-
-        <Table.Column
+        {/* <Table.Column
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
-            <>
-              <ShowButton icon={false} recordItemId={record.id}>
-                View
-              </ShowButton>
-            </>
+            <Space>
+              <EditButton icon={false} recordItemId={record.id}></EditButton>
+            </Space>
           )}
-        />
+        /> */}
       </Table>
+
+      <Modal
+        {...modalProps}
+        onCancel={handleClodeModal}
+        okButtonProps={{
+          loading: formLoading,
+          htmlType: "submit",
+          form: "createForm",
+        }}
+      >
+        <Form
+          id="createForm"
+          {...formProps}
+          layout="vertical"
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[{ required: true }]}
+          >
+            <Input placeholder="Enter username"></Input>
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[{ required: true }]}
+          >
+            <Input.Password placeholder="Enter password"></Input.Password>
+          </Form.Item>
+        </Form>
+      </Modal>
     </List>
   );
 };

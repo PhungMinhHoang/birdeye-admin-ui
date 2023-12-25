@@ -4,7 +4,7 @@ import { Divider, Flex, Typography } from "antd";
 const { Title, Text } = Typography;
 import React from "react";
 
-export const UserShow: React.FC = () => {
+export const CustomerShow: React.FC = () => {
   const { queryResult } = useShow();
   const { data, isLoading } = queryResult;
   const record = data?.data || {};

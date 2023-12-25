@@ -21,33 +21,27 @@ import routerBindings, {
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import { App as AntdApp } from "antd";
-import { DollarOutlined, GiftOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  DollarOutlined,
+  GiftOutlined,
+  UserAddOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { authProvider } from "./authProvider";
 import { AppIcon } from "./components/app-icon";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
-import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
-import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./pages/categories";
 
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
-import { UserList } from "./pages/users";
+import { CustomerList } from "./pages/customers";
 import { TokenList, TokenShow } from "./pages/tokens";
-import { UserShow } from "./pages/users";
+import { CustomerShow } from "./pages/customers";
 import { RewardList, RewardCreate } from "./pages/rewards";
+import { UserList } from "./pages/users";
 
 import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
 import axiosInstance from "./axios";
@@ -88,12 +82,12 @@ function App() {
                     },
                   },
                   {
-                    name: "users",
-                    list: "/users",
-                    edit: "/users/:id",
-                    show: "/users/:id",
+                    name: "customers",
+                    list: "/customers",
+                    edit: "/customers/:id",
+                    show: "/customers/:id",
                     meta: {
-                      label: "Update user role",
+                      label: "Update customer role",
                       icon: <UserOutlined />,
                     },
                   },
@@ -103,27 +97,11 @@ function App() {
                     create: "/rewards/create",
                     icon: <GiftOutlined />,
                   },
-
-                  // {
-                  //   name: "blog_posts",
-                  //   list: "/blog-posts",
-                  //   create: "/blog-posts/create",
-                  //   edit: "/blog-posts/edit/:id",
-                  //   show: "/blog-posts/show/:id",
-                  //   meta: {
-                  //     canDelete: true,
-                  //   },
-                  // },
-                  // {
-                  //   name: "categories",
-                  //   list: "/categories",
-                  //   create: "/categories/create",
-                  //   edit: "/categories/edit/:id",
-                  //   show: "/categories/show/:id",
-                  //   meta: {
-                  //     canDelete: true,
-                  //   },
-                  // },
+                  {
+                    name: "admins",
+                    list: "/admins",
+                    icon: <UserAddOutlined />,
+                  },
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -163,26 +141,17 @@ function App() {
                       <Route index element={<TokenList />} />
                       <Route path=":id" element={<TokenShow />} />
                     </Route>
-                    <Route path="/users">
-                      <Route index element={<UserList />} />
-                      <Route path=":id" element={<UserShow />} />
+                    <Route path="/customers">
+                      <Route index element={<CustomerList />} />
+                      <Route path=":id" element={<CustomerShow />} />
                     </Route>
                     <Route path="/rewards">
                       <Route index element={<RewardList />} />
                       <Route path="create" element={<RewardCreate />} />
-                      {/* <Route path=":id" element={<UserShow />} /> */}
+                      {/* <Route path=":id" element={<CustomerShow />} /> */}
                     </Route>
-                    <Route path="/blog-posts">
-                      <Route index element={<BlogPostList />} />
-                      <Route path="create" element={<BlogPostCreate />} />
-                      <Route path="edit/:id" element={<BlogPostEdit />} />
-                      <Route path="show/:id" element={<BlogPostShow />} />
-                    </Route>
-                    <Route path="/categories">
-                      <Route index element={<CategoryList />} />
-                      <Route path="create" element={<CategoryCreate />} />
-                      <Route path="edit/:id" element={<CategoryEdit />} />
-                      <Route path="show/:id" element={<CategoryShow />} />
+                    <Route path="/admins">
+                      <Route index element={<UserList />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
