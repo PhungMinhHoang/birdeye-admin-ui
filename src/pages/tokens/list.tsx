@@ -60,8 +60,9 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
   } = useModal({
     modalProps: {
       title: "Token info update request",
-      width: 1000,
+      width: 850,
       footer: null,
+      maskClosable: false,
     },
   });
   const [token, setToken] = useState<BaseRecord>();
@@ -95,13 +96,14 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="timestamp"
           title={translate("tokens.fields.timestamp")}
           render={(value: any) => (
-            <DateField value={value * 1000} format="D/M/YYYY HH:mm:ss" />
+            <DateField value={value} format="D/M/YYYY HH:mm:ss" />
           )}
         />
 
         <Table.Column
-          dataIndex="track"
+          dataIndex="trackType"
           title={translate("tokens.fields.track")}
+          render={(value: string) => value.slice(0, value.indexOf(":"))}
         />
         <Table.Column
           dataIndex="tokenName"

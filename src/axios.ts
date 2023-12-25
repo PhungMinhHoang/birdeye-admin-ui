@@ -1,7 +1,8 @@
 import { HttpError } from "@refinedev/core";
 import axios, { type AxiosResponse } from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
-import { REFRESH_TOKEN_KEY, TOKEN_KEY } from "./constants";
+import { REFRESH_TOKEN_KEY, TOKEN_KEY, USER_INFO } from "./constants";
+import { redirect } from "react-router-dom";
 
 const axiosInstance = axios.create({
   baseURL: "https://internal.birdeye.so",
@@ -31,23 +32,33 @@ axiosInstance.interceptors.response.use(
 );
 
 // Function that will be called to refresh authorization
-const refreshAuthLogic = async (failedRequest: any) => {
-  const token = localStorage.getItem("refreshToken");
+const refreshAuthLogic = () => {
+  const token = localStorage.getItem(REFRESH_TOKEN_KEY);
 
-  if (!token) return;
+  if (!token) {
+    redirect("/login");
+    return Promise.resolve();
+  }
 
-  try {
-    const response = await axiosInstance.post("/auth/refreshToken", {
+  return axiosInstance
+    .post("/auth/refreshToken", {
       token,
+    })
+    .then((response) => {
+      const { accessToken, refreshToken } = response.data;
+      localStorage.setItem(TOKEN_KEY, accessToken);
+      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+
+      return Promise.resolve();
+    })
+    .catch(() => {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
+      localStorage.removeItem(USER_INFO);
+
+      redirect("/login");
+      return Promise.resolve();
     });
-
-    const { accessToken, refreshToken } = response.data;
-    localStorage.setItem(TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-
-    failedRequest.response.config.headers["Authorization"] =
-      "Bearer " + accessToken;
-  } catch (error) {}
 };
 
 createAuthRefreshInterceptor(axiosInstance, refreshAuthLogic);
