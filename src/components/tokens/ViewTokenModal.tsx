@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   BaseRecord,
   IResourceComponentsProps,
@@ -6,14 +6,18 @@ import {
   useTranslate,
   useUpdate,
 } from "@refinedev/core";
+import { useForm } from "@refinedev/antd";
 import {
-  Show,
-  TextField,
-  NumberField,
-  DateField,
-  TagField,
-} from "@refinedev/antd";
-import { Button, Divider, Flex, Modal, Space, Tag, Typography } from "antd";
+  Form,
+  Button,
+  Divider,
+  Flex,
+  Modal,
+  Space,
+  Tag,
+  Typography,
+  Input,
+} from "antd";
 import dayjs from "dayjs";
 
 const { Title, Text, Link, Paragraph } = Typography;
@@ -39,262 +43,210 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
     }
   };
 
-  const { mutate, isLoading: isUpdating } = useUpdate();
-  const updateTokenInfo = async (status: string) => {
-    if (token.id) {
-      await mutate({
-        resource: "tokens",
-        id: token.id,
-        values: {
-          status,
-        },
-      });
-    }
-  };
-
-  const { confirm } = Modal;
-  const showPromiseConfirm = (action: string) => {
-    confirm({
-      title: `${action}! Are you sure?`,
-      okText: "Yes, Confirm",
-      cancelText: "Maybe not",
-      okButtonProps: { loading: isUpdating },
-      onOk() {
-        let newStatus = "";
-        switch (action) {
-          case "Verify":
-            newStatus = "Verified";
-            break;
-          case "Update":
-            newStatus = "Updated";
-            break;
-          case "Refuse":
-            newStatus = "Refused";
-
-          default:
-            break;
-        }
-
-        return updateTokenInfo(newStatus);
-      },
-      onCancel() {},
-    });
-  };
-
-  const tokenDetail = useMemo(() => {
+  const tokenInfoFields = useMemo(() => {
     return [
-      { label: "Form ID", value: token.formId },
+      {
+        label: "Form ID",
+        value: token.formId,
+        name: "formId",
+      },
       {
         label: "Timestamp",
         value: dayjs(token.updatedAt).format("D/M/YYYY hh:mm:ss"),
+        name: "updatedAt",
       },
-      { label: "Contact Address", value: token.contactAddress },
+      {
+        label: "Contact Address",
+        value: token.contactAddress,
+        name: "contactAddress",
+      },
       {
         label: "Confirm Public And Easily Verified",
         value: token.confirmPublicAndEasilyVerified,
+        name: "confirmPublicAndEasilyVerified",
       },
       {
         label: "Confirm Manual And Paid Service",
         value: token.confirmManualAndPaidServie,
+        name: "confirmManualAndPaidServie",
       },
       {
         label: "Birdeye Token Link",
-        value: (
-          <Link href={token.birdeyeTokenLink} target="_blank">
-            {token.birdeyeTokenLink}
-          </Link>
-        ),
+        value: token.birdeyeTokenLink,
+        name: "birdeyeTokenLink",
       },
-      { label: "Token Name", value: token.tokenName },
-      { label: "Token Symbol", value: token.tokenSymbol },
+      {
+        label: "Token Name",
+        value: token.tokenName,
+        name: "tokenName",
+      },
+      {
+        label: "Token Symbol",
+        value: token.tokenSymbol,
+        name: "tokenSymbol",
+      },
       {
         label: "Website",
-        value: (
-          <Link href={token.website} target="_blank">
-            {token.website}
-          </Link>
-        ),
+        value: token.website,
+        name: "website",
       },
-      { label: "Contact Email", value: token.contactEmail },
+      {
+        label: "Contact Email",
+        value: token.contactEmail,
+        name: "contactEmail",
+      },
       {
         label: "Project Introduction Text",
         value: token.projectIntroductionText,
+        name: "projectIntroductionText",
       },
       {
         label: "Logo Link",
-        value: (
-          <Link href={token.logoLink} target="_blank">
-            {token.logoLink}
-          </Link>
-        ),
+        value: token.logoLink,
+        name: "logoLink",
       },
       {
         label: "Coingecko Link",
-        value: (
-          <Link href={token.coingeckoLink} target="_blank">
-            {token.coingeckoLink}
-          </Link>
-        ),
+        value: token.coingeckoLink,
+        name: "coingeckoLink",
       },
       {
         label: "Coinmarketcap Link",
-        value: (
-          <Link href={token.coinmarketcapLink} target="_blank">
-            {token.coinmarketcapLink}
-          </Link>
-        ),
+        value: token.coinmarketcapLink,
+        name: "coinmarketcapLink",
       },
       {
         label: "Whitepaper Link",
-        value: (
-          <Link href={token.whitePaperLink} target="_blank">
-            {token.whitePaperLink}
-          </Link>
-        ),
+        value: token.whitePaperLink,
+        name: "whitePaperLink",
       },
       {
         label: "Blockchain Platform 1",
-        value: (
-          <Link href={token.blockchainPlatform1} target="_blank">
-            {token.blockchainPlatform1}
-          </Link>
-        ),
+        value: token.blockchainPlatform1,
+        name: "blockchainPlatform1",
       },
       {
         label: "Blockchain Platform 2",
-        value: (
-          <Link href={token.blockchainPlatform2} target="_blank">
-            {token.blockchainPlatform2}
-          </Link>
-        ),
+        value: token.blockchainPlatform2,
+        name: "blockchainPlatform2",
       },
       {
         label: "Blockchain Platform 3",
-        value: (
-          <Link href={token.blockchainPlatform3} target="_blank">
-            {token.blockchainPlatform3}
-          </Link>
-        ),
+        value: token.blockchainPlatform3,
+        name: "blockchainPlatform3",
       },
       {
         label: "Blockchain Platform 4",
-        value: (
-          <Link href={token.blockchainPlatform4} target="_blank">
-            {token.blockchainPlatform4}
-          </Link>
-        ),
+        value: token.blockchainPlatform4,
+        name: "blockchainPlatform4",
       },
       {
         label: "Blockchain Platform 5",
-        value: (
-          <Link href={token.blockchainPlatform5} target="_blank">
-            {token.blockchainPlatform5}
-          </Link>
-        ),
+        value: token.blockchainPlatform5,
+        name: "blockchainPlatform5",
       },
       {
         label: "X (Twitter) Handle",
-        value: (
-          <Link href={token.xTwitterHandle} target="_blank">
-            {token.xTwitterHandle}
-          </Link>
-        ),
+        value: token.xTwitterHandle,
+        name: "xTwitterHandle",
       },
       {
         label: "Discord Server",
-        value: (
-          <Link href={token.discordServer} target="_blank">
-            {token.discordServer}
-          </Link>
-        ),
+        value: token.discordServer,
+        name: "discordServer",
       },
       {
         label: "Telegram Group",
-        value: (
-          <Link href={token.telegramGroup} target="_blank">
-            {token.telegramGroup}
-          </Link>
-        ),
+        value: token.telegramGroup,
+        name: "telegramGroup",
       },
       {
         label: "Facebook Fanpage",
-        value: (
-          <Link href={token.facebookFanpage} target="_blank">
-            {token.facebookFanpage}
-          </Link>
-        ),
+        value: token.facebookFanpage,
+        name: "facebookFanpage",
       },
       {
         label: "Instagram Page",
-        value: (
-          <Link href={token.instagramPage} target="_blank">
-            {token.instagramPage}
-          </Link>
-        ),
+        value: token.instagramPage,
+        name: "instagramPage",
       },
       {
         label: "Tiktok Account",
-        value: (
-          <Link href={token.tiktokAccount} target="_blank">
-            {token.tiktokAccount}
-          </Link>
-        ),
+        value: token.tiktokAccount,
+        name: "tiktokAccount",
       },
       {
         label: "Medium Page",
-        value: (
-          <Link href={token.mediumPage} target="_blank">
-            {token.mediumPage}
-          </Link>
-        ),
+        value: token.mediumPage,
+        name: "mediumPage",
       },
       {
         label: "Substack Page",
-        value: (
-          <Link href={token.substackPage} target="_blank">
-            {token.substackPage}
-          </Link>
-        ),
+        value: token.substackPage,
+        name: "substackPage",
       },
       {
         label: "Reddit Page",
-        value: (
-          <Link href={token.redditPage} target="_blank">
-            {token.redditPage}
-          </Link>
-        ),
+        value: token.redditPage,
+        name: "redditPage",
       },
       {
         label: "Github Account",
-        value: (
-          <Link href={token.githubAccount} target="_blank">
-            {token.githubAccount}
-          </Link>
-        ),
+        value: token.githubAccount,
+        name: "githubAccount",
       },
       {
         label: "Bitbucket Account",
-        value: (
-          <Link href={token.bitbucketAccount} target="_blank">
-            {token.bitbucketAccount}
-          </Link>
-        ),
+        value: token.bitbucketAccount,
+        name: "bitbucketAccount",
       },
-      { label: "Track Type", value: token.trackType },
-      { label: "Payment Evidence", value: <Link href={token.paymentEvidence} target="_blank">{token.paymentEvidence}</Link> },
+      {
+        label: "Track Type",
+        value: token.trackType,
+        name: "trackType",
+      },
+      {
+        label: "Payment Evidence",
+        value: token.paymentEvidence,
+        name: "paymentEvidence",
+      },
     ];
   }, [token]);
 
+  const { formProps, formLoading, form, onFinish } = useForm({
+    resource: "tokens",
+    action: "edit",
+    onMutationSuccess: (data) => {},
+  });
+
+  const [action, setAction] = useState<string>();
+  const handleSubmit = (formValues: any) => {
+    switch (action) {
+      case "Verify":
+        break;
+      case "Update":
+        break;
+      case "Refuse":
+
+      default:
+        break;
+    }
+
+    onFinish(formValues);
+  };
+
   return (
-    <>
-      <Flex vertical gap={8}>
-        {tokenDetail.map((row, index) => (
-          <Flex key={index}>
-            <div style={{ width: "200px", flexShrink: 0 }}>{row.label}</div>
-            <Text>{row.value}</Text>
-          </Flex>
-        ))}
-      </Flex>
+    <Form
+      {...formProps}
+      layout="vertical"
+      initialValues={{ ...token }}
+      onFinish={handleSubmit}
+    >
+      {tokenInfoFields.map((field, index) => (
+        <Form.Item label={field.label} name={field.name} key={index}>
+          <Input />
+        </Form.Item>
+      ))}
 
       <Divider />
 
@@ -302,8 +254,10 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
         {(token.status === "Pending" || token.status === "Verified") && (
           <Button
             type="default"
+            htmlType="submit"
             danger
-            onClick={() => showPromiseConfirm("Refuse")}
+            loading={action === "Refuse" && formLoading}
+            onClick={() => setAction("Refuse")}
           >
             Refuse
           </Button>
@@ -311,18 +265,28 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
 
         <Space size="middle">
           {token.status === "Pending" && (
-            <Button type="primary" onClick={() => showPromiseConfirm("Verify")}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={action === "Verify" && formLoading}
+              onClick={() => setAction("Verify")}
+            >
               Verify
             </Button>
           )}
           {token.status === "Verified" && (
-            <Button type="primary" onClick={() => showPromiseConfirm("Update")}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={action === "Update" && formLoading}
+              onClick={() => setAction("Update")}
+            >
               Update DB
             </Button>
           )}
         </Space>
       </Flex>
-    </>
+    </Form>
   );
 };
 
