@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLogin } from "@refinedev/core";
 import {
   Row,
@@ -23,8 +23,22 @@ export interface ILoginForm {
 
 export const Login: React.FC = () => {
   const [form] = Form.useForm<ILoginForm>();
+  const [loading, setLoading] = useState(false);
 
   const { mutate: login } = useLogin<ILoginForm>();
+
+  const handleLogin = (values: ILoginForm) => {
+    setLoading(true);
+
+    login(values, {
+      onSuccess() {
+        setLoading(false);
+      },
+      onError() {
+        setLoading(false);
+      },
+    });
+  };
 
   const CardTitle = (
     <Title level={3} className="title">
@@ -50,9 +64,7 @@ export const Login: React.FC = () => {
               <Form<ILoginForm>
                 layout="vertical"
                 form={form}
-                onFinish={(values) => {
-                  login(values);
-                }}
+                onFinish={handleLogin}
                 requiredMark={false}
                 initialValues={{
                   username: "khanguyen",
@@ -76,7 +88,13 @@ export const Login: React.FC = () => {
                   <Input type="password" placeholder="●●●●●●●●" size="large" />
                 </Form.Item>
 
-                <Button type="primary" size="large" htmlType="submit" block>
+                <Button
+                  type="primary"
+                  size="large"
+                  htmlType="submit"
+                  loading={loading}
+                  style={{ marginTop: "16px" }}
+                >
                   Sign in
                 </Button>
               </Form>
