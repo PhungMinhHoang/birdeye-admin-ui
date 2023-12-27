@@ -4,9 +4,9 @@ import { authProvider } from "./authProvider";
 export const accessControlProvider: AccessControlProvider = {
   can: async ({ resource, action, params }) => {
     const authorityData = params?.resource?.meta?.authority;
-    let checkPermission = "";
-
-    checkPermission = authorityData ? authorityData[action] : resource;
+    const checkPermission = authorityData
+      ? authorityData[action]
+      : params?.authority;
     //console.log("checkPermission---->", checkPermission);
 
     if (!checkPermission) {

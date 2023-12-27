@@ -3,8 +3,9 @@ import { SaveButton } from "@refinedev/antd";
 import { Form, Button, Divider, Flex, Space, Input, InputProps } from "antd";
 import dayjs from "dayjs";
 import { LinkOutlined } from "@ant-design/icons";
-import { useUpdate } from "@refinedev/core";
+import { useCan, useUpdate } from "@refinedev/core";
 import { CopyButton } from "../elements/CopyButton";
+import { $permissions } from "../../constants";
 
 type FormFieldData = {
   label: string;
@@ -421,6 +422,13 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
           <SaveButton
             type="primary"
             htmlType="submit"
+            disabled={
+              useCan({
+                resource: "token/update-info-requests",
+                action: "edit",
+                params: { authority: $permissions.VERIFY_TOKEN_INFO_REQUEST },
+              }).data?.can === false
+            }
             loading={action === "Verify" && isLoading}
             onClick={() => setAction("Verify")}
           >
@@ -430,6 +438,13 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
           <SaveButton
             type="primary"
             htmlType="submit"
+            disabled={
+              useCan({
+                resource: "token/update-info-requests",
+                action: "edit",
+                params: { authority: $permissions.UPDATE_TOKEN_INFO_REQUEST },
+              }).data?.can == false
+            }
             loading={action === "Update" && isLoading}
             onClick={() => setAction("Update")}
           >
@@ -442,6 +457,13 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
             type="default"
             htmlType="submit"
             danger
+            disabled={
+              useCan({
+                resource: "token/update-info-requests",
+                action: "edit",
+                params: { authority: $permissions.REJECT_TOKEN_INFO_REQUEST },
+              }).data?.can === false
+            }
             loading={action === "Reject" && isLoading}
             onClick={() => setAction("Reject")}
           >

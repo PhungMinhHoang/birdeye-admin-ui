@@ -6,7 +6,7 @@ export const $permissions = {
   VIEW_TOKEN_INFO_REQUEST: "token.infoRequest:read",
   VERIFY_TOKEN_INFO_REQUEST: "token.infoRequest:verify",
   UPDATE_TOKEN_INFO_REQUEST: "token.infoRequest:update",
-  REFUSE_TOKEN_INFO_REQUEST: "token.infoRequest:refuse",
+  REJECT_TOKEN_INFO_REQUEST: "token.infoRequest:reject",
 
   VIEW_ADMIN: "administration.admin:read",
   CREATE_ADMIN: "administration.admin:create",
