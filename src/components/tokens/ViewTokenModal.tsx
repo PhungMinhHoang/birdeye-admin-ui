@@ -1,12 +1,5 @@
 import React, { useMemo, useState } from "react";
-import {
-  BaseRecord,
-  IResourceComponentsProps,
-  useShow,
-  useTranslate,
-  useUpdate,
-} from "@refinedev/core";
-import { useForm } from "@refinedev/antd";
+import { SaveButton, useForm } from "@refinedev/antd";
 import {
   Form,
   Button,
@@ -17,207 +10,346 @@ import {
   Tag,
   Typography,
   Input,
+  InputProps,
 } from "antd";
 import dayjs from "dayjs";
+import { LinkOutlined } from "@ant-design/icons";
+import { CopyButton } from "../elements/CopyButton";
 
-const { Title, Text, Link, Paragraph } = Typography;
+type FormFieldData = {
+  label: string;
+  name: string;
+  inputProps?: InputProps;
+};
 
 const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
-  const translate = useTranslate();
-  // const { queryResult } = useShow();
-  // const { data, isLoading } = queryResult;
-  // const token = data?.data || {};
+  const { formProps, formLoading, form, onFinish } = useForm({
+    //resource: "tokens",
+    action: "edit",
+    id: token._id,
+    onMutationSuccess: (data) => {},
+  });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Pending":
-        return "default";
-      case "Verified":
-        return "warning";
-      case "Updated":
-        return "success";
-      case "Refused":
-        return "error";
-      default:
-        break;
-    }
-  };
+  const initialValues = useMemo(() => {
+    return {
+      ...token,
+      updatedAt: dayjs(token.updatedAt).format("D/M/YYYY hh:mm:ss"),
+    };
+  }, [token]);
 
-  const tokenInfoFields = useMemo(() => {
+  const tokenInfoFields = useMemo<FormFieldData[]>(() => {
     return [
       {
         label: "Form ID",
-        value: token.formId,
         name: "formId",
+        inputProps: {
+          readOnly: true,
+        },
       },
       {
         label: "Timestamp",
-        value: dayjs(token.updatedAt).format("D/M/YYYY hh:mm:ss"),
         name: "updatedAt",
+        inputProps: {
+          readOnly: true,
+        },
       },
       {
         label: "Contact Address",
-        value: token.contactAddress,
         name: "contactAddress",
+        inputProps: {
+          addonAfter: (
+            <CopyButton text={form.getFieldValue("contactAddress")} />
+          ),
+        },
       },
       {
         label: "Confirm Public And Easily Verified",
-        value: token.confirmPublicAndEasilyVerified,
         name: "confirmPublicAndEasilyVerified",
+        inputProps: {
+          readOnly: true,
+        },
       },
       {
         label: "Confirm Manual And Paid Service",
-        value: token.confirmManualAndPaidServie,
-        name: "confirmManualAndPaidServie",
+        name: "confirmManualAndPaidService",
+        inputProps: {
+          readOnly: true,
+        },
       },
       {
         label: "Birdeye Token Link",
-        value: token.birdeyeTokenLink,
         name: "birdeyeTokenLink",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("birdeyeTokenLink")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Token Name",
-        value: token.tokenName,
         name: "tokenName",
       },
       {
         label: "Token Symbol",
-        value: token.tokenSymbol,
         name: "tokenSymbol",
       },
       {
         label: "Website",
-        value: token.website,
         name: "website",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("website")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Contact Email",
-        value: token.contactEmail,
         name: "contactEmail",
       },
       {
         label: "Project Introduction Text",
-        value: token.projectIntroductionText,
-        name: "projectIntroductionText",
+        name: "description",
       },
       {
         label: "Logo Link",
-        value: token.logoLink,
         name: "logoLink",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("logoLink")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Coingecko Link",
-        value: token.coingeckoLink,
         name: "coingeckoLink",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("coingeckoLink")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Coinmarketcap Link",
-        value: token.coinmarketcapLink,
         name: "coinmarketcapLink",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("coinmarketcapLink")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Whitepaper Link",
-        value: token.whitePaperLink,
         name: "whitePaperLink",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("whitePaperLink")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Blockchain Platform 1",
-        value: token.blockchainPlatform1,
         name: "blockchainPlatform1",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("blockchainPlatform1")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Blockchain Platform 2",
-        value: token.blockchainPlatform2,
         name: "blockchainPlatform2",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("blockchainPlatform2")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Blockchain Platform 3",
-        value: token.blockchainPlatform3,
         name: "blockchainPlatform3",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("blockchainPlatform3")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Blockchain Platform 4",
-        value: token.blockchainPlatform4,
         name: "blockchainPlatform4",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("blockchainPlatform4")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Blockchain Platform 5",
-        value: token.blockchainPlatform5,
         name: "blockchainPlatform5",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("blockchainPlatform5")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "X (Twitter) Handle",
-        value: token.xTwitterHandle,
-        name: "xTwitterHandle",
+        name: "twitter",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("twitter")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Discord Server",
-        value: token.discordServer,
-        name: "discordServer",
+        name: "discord",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("discord")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Telegram Group",
-        value: token.telegramGroup,
-        name: "telegramGroup",
+        name: "telegram",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("telegram")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Facebook Fanpage",
-        value: token.facebookFanpage,
-        name: "facebookFanpage",
+        name: "facebook",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("facebook")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Instagram Page",
-        value: token.instagramPage,
-        name: "instagramPage",
+        name: "instagram",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("instagram")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Tiktok Account",
-        value: token.tiktokAccount,
-        name: "tiktokAccount",
+        name: "tiktok",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("tiktok")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Medium Page",
-        value: token.mediumPage,
-        name: "mediumPage",
+        name: "medium",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("medium")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Substack Page",
-        value: token.substackPage,
-        name: "substackPage",
+        name: "substack",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("substack")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Reddit Page",
-        value: token.redditPage,
-        name: "redditPage",
+        name: "reddit",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("reddit")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Github Account",
-        value: token.githubAccount,
-        name: "githubAccount",
+        name: "github",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("github")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Bitbucket Account",
-        value: token.bitbucketAccount,
-        name: "bitbucketAccount",
+        name: "bitbucket",
+        inputProps: {
+          addonAfter: (
+            <a href={form.getFieldValue("bitbucket")} target="_blank">
+              <LinkOutlined />
+            </a>
+          ),
+        },
       },
       {
         label: "Track Type",
-        value: token.trackType,
         name: "trackType",
+        inputProps: {
+          readOnly: true,
+        },
       },
       {
         label: "Payment Evidence",
-        value: token.paymentEvidence,
         name: "paymentEvidence",
+        inputProps: {
+          readOnly: true,
+        },
       },
     ];
-  }, [token]);
-
-  const { formProps, formLoading, form, onFinish } = useForm({
-    resource: "tokens",
-    action: "edit",
-    onMutationSuccess: (data) => {},
-  });
+  }, [token, form.getFieldsValue()]);
 
   const [action, setAction] = useState<string>();
   const handleSubmit = (formValues: any) => {
@@ -239,14 +371,16 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
     <Form
       {...formProps}
       layout="vertical"
-      initialValues={{ ...token }}
+      initialValues={initialValues}
       onFinish={handleSubmit}
     >
-      {tokenInfoFields.map((field, index) => (
-        <Form.Item label={field.label} name={field.name} key={index}>
-          <Input />
-        </Form.Item>
-      ))}
+      <div style={{ maxHeight: "60vh", overflow: "auto" }}>
+        {tokenInfoFields.map((field, index) => (
+          <Form.Item label={field.label} name={field.name} key={index}>
+            <Input allowClear {...field.inputProps} />
+          </Form.Item>
+        ))}
+      </div>
 
       <Divider />
 
@@ -264,26 +398,23 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
         )}
 
         <Space size="middle">
-          {token.status === "Pending" && (
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={action === "Verify" && formLoading}
-              onClick={() => setAction("Verify")}
-            >
-              Verify
-            </Button>
-          )}
-          {token.status === "Verified" && (
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={action === "Update" && formLoading}
-              onClick={() => setAction("Update")}
-            >
-              Update DB
-            </Button>
-          )}
+          <SaveButton
+            type="primary"
+            htmlType="submit"
+            loading={action === "Verify" && formLoading}
+            onClick={() => setAction("Verify")}
+          >
+            Verify
+          </SaveButton>
+
+          <SaveButton
+            type="primary"
+            htmlType="submit"
+            loading={action === "Update" && formLoading}
+            onClick={() => setAction("Update")}
+          >
+            Update DB
+          </SaveButton>
         </Space>
       </Flex>
     </Form>

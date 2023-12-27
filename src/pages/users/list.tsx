@@ -5,6 +5,7 @@ import {
   useTranslate,
   getDefaultFilter,
   useList,
+  useDelete,
 } from "@refinedev/core";
 import {
   useTable,
@@ -13,7 +14,6 @@ import {
   EditButton,
   ShowButton,
   DeleteButton,
-  FilterDropdown,
   useModal,
   useForm,
 } from "@refinedev/antd";
@@ -21,12 +21,9 @@ import {
   Table,
   Space,
   Form,
-  Button,
   Input,
-  Radio,
   Modal,
-  Flex,
-  Typography,
+  Select,
 } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { redirect } from "react-router-dom";
@@ -46,6 +43,13 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const { data: roles } = useList<Role>({
     resource: "roles",
   });
+
+  const roleOptionSelect = useMemo(() => {
+    return roles?.data.map((role) => ({
+      label: role.name,
+      value: role._id,
+    }));
+  }, [roles]);
 
   const getRoleNames = (ids: string): string => {
     if (!roles?.total) return "";
@@ -79,6 +83,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const { formProps, formLoading, form } = useForm({
     resource: "admins",
     action: "create",
+    onMutationSuccess: handleClodeModal,
   });
 
   return (
@@ -100,15 +105,21 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           )}
         />
 
-        {/* <Table.Column
+        <Table.Column
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
             <Space>
-              <EditButton icon={false} recordItemId={record.id}></EditButton>
+              {/* <EditButton icon={false} recordItemId={record.id}></EditButton> */}
+
+              <DeleteButton
+                hideText
+                resource="admins"
+                recordItemId={record._id}
+              ></DeleteButton>
             </Space>
           )}
-        /> */}
+        />
       </Table>
 
       <Modal
@@ -140,6 +151,14 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             rules={[{ required: true }]}
           >
             <Input.Password placeholder="Enter password"></Input.Password>
+          </Form.Item>
+
+          <Form.Item label="Role" name="roleIds" rules={[{ required: true }]}>
+            <Select
+              options={roleOptionSelect}
+              mode="multiple"
+              placeholder="Select role"
+            />
           </Form.Item>
         </Form>
       </Modal>

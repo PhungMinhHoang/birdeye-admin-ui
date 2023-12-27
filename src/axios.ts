@@ -38,7 +38,7 @@ const refreshAuthLogic = async () => {
   const token = localStorage.getItem(REFRESH_TOKEN_KEY);
 
   try {
-    const response = await axiosRefreshInstance.post("/auth/refreshToken", {
+    const response = await axiosRefreshInstance.post("/auth/refresh-token", {
       token,
     });
 

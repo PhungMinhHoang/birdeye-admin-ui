@@ -87,14 +87,7 @@ export const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
 
       if (children.length > 0) {
         return (
-          <CanAccess
-            key={item.key}
-            resource={name.toLowerCase()}
-            action="list"
-            params={{
-              resource: item,
-            }}
-          >
+          <CanAccess key={item.key} resource={meta?.authority}>
             <SubMenu
               key={item.key}
               icon={icon ?? <UnorderedListOutlined />}
@@ -117,11 +110,7 @@ export const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
       return (
         <CanAccess
           key={item.key}
-          resource={name.toLowerCase()}
-          action="list"
-          params={{
-            resource: item,
-          }}
+          resource={meta?.authority}
         >
           <Menu.Item
             key={item.key}
@@ -243,7 +232,7 @@ export const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
             >
               <div
                 style={{
-                  width: "200px",
+                  width: "220px",
                   padding: "0 16px",
                   display: "flex",
                   justifyContent: "flex-start",
@@ -289,12 +278,13 @@ export const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
       {fixed && (
         <div
           style={{
-            width: siderCollapsed ? "80px" : "200px",
+            width: siderCollapsed ? "80px" : "220px",
             transition: "all 0.2s",
           }}
         />
       )}
       <Layout.Sider
+        width={220}
         style={siderStyles}
         collapsible
         collapsed={siderCollapsed}
@@ -333,7 +323,7 @@ export const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
       >
         <div
           style={{
-            width: siderCollapsed ? "80px" : "200px",
+            width: siderCollapsed ? "80px" : "220px",
             padding: siderCollapsed ? "0" : "0 16px",
             display: "flex",
             justifyContent: siderCollapsed ? "center" : "flex-start",

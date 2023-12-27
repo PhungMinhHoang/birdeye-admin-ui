@@ -9,7 +9,7 @@ import {
 } from "@refinedev/nestjsx-crud";
 import { AxiosInstance } from "axios";
 import { stringify } from "query-string";
-import axiosInstance from "./axios";
+import axiosInstance from "../axios";
 
 export default (
   apiUrl: string,
@@ -79,7 +79,7 @@ export default (
     const url = `${apiUrl}/${resource}/${id}`;
 
     try {
-      const { data } = await httpClient.patch(url, variables);
+      const { data } = await httpClient.post(url, variables);
 
       return {
         data,

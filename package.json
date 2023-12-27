@@ -13,6 +13,7 @@
     "@refinedev/kbar": "^1.1.2",
     "@refinedev/nestjsx-crud": "^5.0.0",
     "@refinedev/react-router-v6": "^4.1.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "antd": "^5.0.5",
     "axios-auth-refresh": "^3.3.6",
     "i18next": "^20.1.0",

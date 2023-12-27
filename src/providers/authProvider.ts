@@ -1,6 +1,7 @@
 import { AuthBindings } from "@refinedev/core";
-import axios from "./axios";
-import { USER_INFO, REFRESH_TOKEN_KEY, TOKEN_KEY } from "./constants";
+import axios from "../axios";
+import { USER_INFO, REFRESH_TOKEN_KEY, TOKEN_KEY } from "../constants";
+import type { User } from "../types";
 
 export const authProvider: AuthBindings = {
   login: async ({ username, password }) => {
@@ -61,7 +62,20 @@ export const authProvider: AuthBindings = {
       redirectTo: "/login",
     };
   },
-  getPermissions: async () => null,
+  getPermissions: async () => {
+    if (localStorage.getItem(USER_INFO)) {
+      const user = JSON.parse(
+        localStorage.getItem(USER_INFO) as string
+      ) as User;
+
+      return user!.roles.reduce<string[]>((permissions, role) => {
+        permissions.push(...role.permissions.map(({ authority }) => authority));
+        return permissions;
+      }, []);
+    }
+
+    return [];
+  },
   getIdentity: async () => {
     let user = localStorage.getItem(USER_INFO);
 

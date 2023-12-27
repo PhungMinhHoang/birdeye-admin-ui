@@ -27,8 +27,8 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
   const { canAccess } = useAuth();
 
   const { tableProps, filters } = useTable({
+    
     syncWithLocation: true,
-    resource: "token/updateInfoRequests",
     pagination: {
       mode: "client",
     },

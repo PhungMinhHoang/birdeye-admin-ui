@@ -1,38 +1,43 @@
-import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
+import { App as AntdApp } from "antd";
+import {
+  DollarOutlined,
+  GiftOutlined,
+  SettingOutlined,
+  UserAddOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+
+import { Authenticated, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
-
-import {
-  ErrorComponent,
-  ThemedLayoutV2,
-  ThemedSiderV2,
-  ThemedTitleV2,
-  useNotificationProvider,
-} from "@refinedev/antd";
-import "@refinedev/antd/dist/reset.css";
-import { CustomSider } from "./components/sider";
-
-import nestjsxCrudDataProvider from "@refinedev/nestjsx-crud";
-import customDataProvider from "./dataProvider";
+import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
 import routerBindings, {
   CatchAllNavigate,
   DocumentTitleHandler,
   NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
-import { App as AntdApp } from "antd";
 import {
-  DollarOutlined,
-  GiftOutlined,
-  UserAddOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { useTranslation } from "react-i18next";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { authProvider } from "./authProvider";
+  ErrorComponent,
+  ThemedLayoutV2,
+  ThemedTitleV2,
+  useNotificationProvider,
+} from "@refinedev/antd";
+import "@refinedev/antd/dist/reset.css";
+
+import { authProvider } from "./providers/authProvider";
+import customDataProvider from "./providers/dataProvider";
+import { accessControlProvider } from "./providers/accessControlProvider";
+
+import axiosInstance from "./axios";
+import { $permissions } from "./constants";
+import { ColorModeContextProvider } from "./contexts/color-mode";
+
+import { CustomSider } from "./components/sider";
 import { AppIcon } from "./components/app-icon";
 import { Header } from "./components/header";
-import { ColorModeContextProvider } from "./contexts/color-mode";
 
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
@@ -42,9 +47,7 @@ import { TokenList, TokenShow } from "./pages/tokens";
 import { CustomerShow } from "./pages/customers";
 import { RewardList, RewardCreate } from "./pages/rewards";
 import { UserList } from "./pages/users";
-
-import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
-import axiosInstance from "./axios";
+import { RoleList, RoleCreate } from "./pages/roles";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -71,14 +74,15 @@ function App() {
                 authProvider={authProvider}
                 i18nProvider={i18nProvider}
                 routerProvider={routerBindings}
+                accessControlProvider={accessControlProvider}
                 resources={[
                   {
-                    name: "tokens",
-                    list: "/tokens",
-                    show: "/tokens/:id",
+                    name: "token/update-info-requests",
+                    list: "/token/update-info-requests",
                     meta: {
                       label: "Update token info",
                       icon: <DollarOutlined />,
+                      authority: $permissions.VIEW_TOKEN_INFO_REQUEST,
                     },
                   },
                   {
@@ -101,11 +105,20 @@ function App() {
                     name: "admins",
                     list: "/admins",
                     icon: <UserAddOutlined />,
+                    meta: {
+                      authority: '*'
+                    }
+                  },
+                  {
+                    name: "roles",
+                    list: "/roles",
+                    create: "/roles/create",
+                    icon: <SettingOutlined />,
                   },
                 ]}
                 options={{
                   syncWithLocation: true,
-                  warnWhenUnsavedChanges: true,
+                  warnWhenUnsavedChanges: false,
                   useNewQueryKeys: true,
                   projectId: "xJxHI1-6SHrVx-eo5B3p",
                 }}
@@ -137,7 +150,7 @@ function App() {
                       index
                       element={<NavigateToResource resource="tokens" />}
                     />
-                    <Route path="/tokens">
+                    <Route path="/token/update-info-requests">
                       <Route index element={<TokenList />} />
                       <Route path=":id" element={<TokenShow />} />
                     </Route>
@@ -153,8 +166,13 @@ function App() {
                     <Route path="/admins">
                       <Route index element={<UserList />} />
                     </Route>
+                    <Route path="/roles">
+                      <Route index element={<RoleList />} />
+                      <Route path="create" element={<RoleCreate />} />
+                    </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
+
                   <Route
                     element={
                       <Authenticated
@@ -175,7 +193,7 @@ function App() {
                 </Routes>
 
                 <RefineKbar />
-                {/* <UnsavedChangesNotifier /> */}
+                <UnsavedChangesNotifier />
                 <DocumentTitleHandler />
               </Refine>
               <DevtoolsPanel />
