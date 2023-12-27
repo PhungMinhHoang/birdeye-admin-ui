@@ -82,7 +82,9 @@ function App() {
                     meta: {
                       label: "Update token info",
                       icon: <DollarOutlined />,
-                      authority: $permissions.VIEW_TOKEN_INFO_REQUEST,
+                      authority: {
+                        list: $permissions.VIEW_TOKEN_INFO_REQUEST,
+                      },
                     },
                   },
                   {
@@ -106,14 +108,25 @@ function App() {
                     list: "/admins",
                     icon: <UserAddOutlined />,
                     meta: {
-                      authority: '*'
-                    }
+                      authority: {
+                        list: $permissions.VIEW_ADMIN,
+                        create: $permissions.CREATE_ADMIN,
+                        edit: $permissions.UPDATE_ADMIN,
+                      },
+                    },
                   },
                   {
                     name: "roles",
                     list: "/roles",
                     create: "/roles/create",
                     icon: <SettingOutlined />,
+                    meta: {
+                      authority: {
+                        list: $permissions.VIEW_ROLE,
+                        create: $permissions.CREATE_ROLE,
+                        edit: $permissions.UPDATE_ROLE,
+                      },
+                    },
                   },
                 ]}
                 options={{

@@ -3,33 +3,9 @@ import {
   IResourceComponentsProps,
   BaseRecord,
   useTranslate,
-  getDefaultFilter,
-  useList,
 } from "@refinedev/core";
-import {
-  useTable,
-  List,
-  DateField,
-  EditButton,
-  ShowButton,
-  DeleteButton,
-  FilterDropdown,
-  useModal,
-  useForm,
-} from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Form,
-  Button,
-  Input,
-  Radio,
-  Modal,
-  Flex,
-  Typography,
-} from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { redirect } from "react-router-dom";
+import { useTable, List, DateField, EditButton } from "@refinedev/antd";
+import { Table, Space } from "antd";
 
 type Role = {
   _id: string;
@@ -61,7 +37,7 @@ export const RoleList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
             <Space>
-              <EditButton icon={false} recordItemId={record.id}></EditButton>
+              <EditButton hideText recordItemId={record.id}></EditButton>
             </Space>
           )}
         />

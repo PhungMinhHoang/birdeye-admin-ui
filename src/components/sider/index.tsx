@@ -87,7 +87,7 @@ export const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
 
       if (children.length > 0) {
         return (
-          <CanAccess key={item.key} resource={meta?.authority}>
+          <CanAccess key={item.key} resource={name.toLowerCase()} action="list">
             <SubMenu
               key={item.key}
               icon={icon ?? <UnorderedListOutlined />}
@@ -108,10 +108,7 @@ export const CustomSider: React.FC<RefineThemedLayoutV2SiderProps> = ({
         activeItemDisabled && isSelected ? { pointerEvents: "none" } : {};
 
       return (
-        <CanAccess
-          key={item.key}
-          resource={meta?.authority}
-        >
+        <CanAccess key={item.key} resource={name.toLowerCase()} action="list">
           <Menu.Item
             key={item.key}
             icon={icon ?? (isRoute && <UnorderedListOutlined />)}

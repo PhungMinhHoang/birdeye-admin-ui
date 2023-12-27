@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import { SaveButton, useForm } from "@refinedev/antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { SaveButton } from "@refinedev/antd";
 import {
   Form,
   Button,
@@ -15,6 +15,7 @@ import {
 import dayjs from "dayjs";
 import { LinkOutlined } from "@ant-design/icons";
 import { CopyButton } from "../elements/CopyButton";
+import { useCustom, useUpdate } from "@refinedev/core";
 
 type FormFieldData = {
   label: string;
@@ -22,19 +23,20 @@ type FormFieldData = {
   inputProps?: InputProps;
 };
 
-const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
-  const { formProps, formLoading, form, onFinish } = useForm({
-    //resource: "tokens",
-    action: "edit",
-    id: token._id,
-    onMutationSuccess: (data) => {},
-  });
+type Props = {
+  token: any;
+  onSuccess: () => void;
+};
 
-  const initialValues = useMemo(() => {
-    return {
+const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
+  const [form] = Form.useForm();
+  const { mutate, isLoading } = useUpdate();
+
+  useEffect(() => {
+    form.setFieldsValue({
       ...token,
       updatedAt: dayjs(token.updatedAt).format("D/M/YYYY hh:mm:ss"),
-    };
+    });
   }, [token]);
 
   const tokenInfoFields = useMemo<FormFieldData[]>(() => {
@@ -351,29 +353,54 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
     ];
   }, [token, form.getFieldsValue()]);
 
-  const [action, setAction] = useState<string>();
+  const [action, setAction] = useState("");
   const handleSubmit = (formValues: any) => {
+    let resource = "";
+
     switch (action) {
       case "Verify":
+        resource = "token/update-info-requests/verify";
         break;
       case "Update":
+        resource = "token/update-info-requests/update-to-birdeye-app";
         break;
       case "Refuse":
-
+        resource = "token/update-info-requests/refuse";
+        break;
       default:
         break;
     }
 
-    onFinish(formValues);
+    mutate(
+      {
+        resource,
+        values: formValues,
+        id: token._id,
+        successNotification: () => {
+          return {
+            message: "",
+            description: `${action} token info successfully`,
+            type: "success",
+          };
+        },
+      },
+      {
+        onSuccess: () => {
+          onSuccess();
+          form.resetFields();
+        },
+        onError: (error, variables, context) => {
+          // An error occurred!
+          debugger;
+        },
+      }
+    );
   };
 
   return (
-    <Form
-      {...formProps}
-      layout="vertical"
-      initialValues={initialValues}
-      onFinish={handleSubmit}
-    >
+    <Form form={form} layout="vertical" onFinish={handleSubmit}>
+      {dayjs().format("D/M/YYYY hh:mm:ss")}
+
       <div style={{ maxHeight: "60vh", overflow: "auto" }}>
         {tokenInfoFields.map((field, index) => (
           <Form.Item label={field.label} name={field.name} key={index}>
@@ -390,7 +417,7 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
             type="default"
             htmlType="submit"
             danger
-            loading={action === "Refuse" && formLoading}
+            loading={action === "Refuse" && isLoading}
             onClick={() => setAction("Refuse")}
           >
             Refuse
@@ -401,7 +428,7 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
           <SaveButton
             type="primary"
             htmlType="submit"
-            loading={action === "Verify" && formLoading}
+            loading={action === "Verify" && isLoading}
             onClick={() => setAction("Verify")}
           >
             Verify
@@ -410,7 +437,7 @@ const ViewTokenModal: React.FC<{ token: any }> = ({ token }) => {
           <SaveButton
             type="primary"
             htmlType="submit"
-            loading={action === "Update" && formLoading}
+            loading={action === "Update" && isLoading}
             onClick={() => setAction("Update")}
           >
             Update DB

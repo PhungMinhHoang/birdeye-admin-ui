@@ -5,6 +5,7 @@ import {
   useTranslate,
   useList,
   getDefaultFilter,
+  CanAccess,
 } from "@refinedev/core";
 import {
   useTable,
@@ -15,19 +16,19 @@ import {
   ShowButton,
   useModal,
 } from "@refinedev/antd";
-import { Table, Space, Button, Tag, Select, Typography, Modal } from "antd";
+import { Table, Button, Tag, Select, Typography, Modal } from "antd";
 import ViewTokenModal from "../../components/tokens/ViewTokenModal";
-import { useAuth } from "../../hooks";
-import { $permissions } from "../../constants";
 
 const { Link } = Typography;
 
 export const TokenList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
-  const { canAccess } = useAuth();
 
-  const { tableProps, filters } = useTable({
-    
+  const {
+    tableProps,
+    filters,
+    tableQueryResult: { isLoading, refetch },
+  } = useTable({
     syncWithLocation: true,
     pagination: {
       mode: "client",
@@ -74,6 +75,11 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
     showViewModal();
   };
 
+  const onUpdateInfoSuccess = () => {
+    closeViewModal();
+    refetch();
+  };
+
   return (
     <List title="TOKEN INFO UPDATE REQUESTS">
       <Table {...tableProps} rowKey="id">
@@ -96,7 +102,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
         />
 
         <Table.Column
-          dataIndex="timestamp"
+          dataIndex="updatedAt"
           title={translate("tokens.fields.timestamp")}
           render={(value: any) => (
             <DateField value={value} format="D/M/YYYY HH:mm:ss" />
@@ -132,17 +138,13 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
-            <>
-              {canAccess($permissions.VERIFY_TOKEN_INFO_REQUEST) && (
-                <Button onClick={() => handleView(record)}>View</Button>
-              )}
-            </>
+            <Button onClick={() => handleView(record)}>View</Button>
           )}
         />
       </Table>
 
       <Modal {...viewModalProps}>
-        <ViewTokenModal token={token} />
+        <ViewTokenModal token={token} onSuccess={onUpdateInfoSuccess} />
       </Modal>
     </List>
   );

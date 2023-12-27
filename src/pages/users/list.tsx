@@ -17,16 +17,7 @@ import {
   useModal,
   useForm,
 } from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Form,
-  Input,
-  Modal,
-  Select,
-} from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { redirect } from "react-router-dom";
+import { Table, Space, Form, Input, Modal, Select } from "antd";
 
 type Role = {
   _id: string;
@@ -75,7 +66,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
-  const handleClodeModal = () => {
+  const handleCloseModal = () => {
     closeModal();
     form.resetFields();
   };
@@ -83,7 +74,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
   const { formProps, formLoading, form } = useForm({
     resource: "admins",
     action: "create",
-    onMutationSuccess: handleClodeModal,
+    onMutationSuccess: handleCloseModal,
   });
 
   return (
@@ -116,6 +107,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                 hideText
                 resource="admins"
                 recordItemId={record._id}
+                disabled={record.isSystemAdmin}
               ></DeleteButton>
             </Space>
           )}
@@ -124,7 +116,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
 
       <Modal
         {...modalProps}
-        onCancel={handleClodeModal}
+        onCancel={handleCloseModal}
         okButtonProps={{
           loading: formLoading,
           htmlType: "submit",

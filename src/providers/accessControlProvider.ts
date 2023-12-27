@@ -3,12 +3,13 @@ import { authProvider } from "./authProvider";
 
 export const accessControlProvider: AccessControlProvider = {
   can: async ({ resource, action, params }) => {
-    console.log("-----");
-    console.log(resource); // products, orders, etc.
-    console.log(action); // list, edit, delete, etc.
-    console.log(params); // { id: 1 }, { id: 2 }, etc.
+    const authorityData = params?.resource?.meta?.authority;
+    let checkPermission = "";
 
-    if (!resource) {
+    checkPermission = authorityData ? authorityData[action] : resource;
+    console.log("checkPermission---->", checkPermission);
+
+    if (!checkPermission) {
       return {
         can: false,
         reason: "Unauthorized",
@@ -16,7 +17,7 @@ export const accessControlProvider: AccessControlProvider = {
     }
 
     // By pass for dev test
-    if (resource === "*") {
+    if (checkPermission === "*") {
       return {
         can: true,
       };
@@ -27,7 +28,7 @@ export const accessControlProvider: AccessControlProvider = {
       : [];
 
     // Check exact match first
-    if (authorities.includes(resource)) {
+    if (authorities.includes(checkPermission)) {
       return {
         can: true,
       };
@@ -35,12 +36,12 @@ export const accessControlProvider: AccessControlProvider = {
 
     // Check for pattern matching
     // security.organization:create is split into 2 parts [security.organization, create]
-    const parts = resource.split(":");
+    const parts = checkPermission.split(":");
     const checkingResource = parts[0];
 
-    for (const resource of authorities) {
+    for (const authority of authorities) {
       // security.organization:* is split into 2 parts [security.organization, *]
-      const authorityParts = resource.split(":");
+      const authorityParts = authority.split(":");
       if (authorityParts.length < 2) {
         continue;
       }
