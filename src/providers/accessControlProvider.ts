@@ -7,7 +7,7 @@ export const accessControlProvider: AccessControlProvider = {
     let checkPermission = "";
 
     checkPermission = authorityData ? authorityData[action] : resource;
-    console.log("checkPermission---->", checkPermission);
+    //console.log("checkPermission---->", checkPermission);
 
     if (!checkPermission) {
       return {

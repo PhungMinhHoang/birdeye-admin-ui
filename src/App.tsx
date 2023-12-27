@@ -161,7 +161,7 @@ function App() {
                   >
                     <Route
                       index
-                      element={<NavigateToResource resource="tokens" />}
+                      element={<NavigateToResource resource="token/update-info-requests" />}
                     />
                     <Route path="/token/update-info-requests">
                       <Route index element={<TokenList />} />
