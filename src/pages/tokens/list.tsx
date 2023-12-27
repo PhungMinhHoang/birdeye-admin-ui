@@ -3,17 +3,13 @@ import {
   IResourceComponentsProps,
   BaseRecord,
   useTranslate,
-  useList,
   getDefaultFilter,
-  CanAccess,
 } from "@refinedev/core";
 import {
   useTable,
   List,
   DateField,
   FilterDropdown,
-  useSelect,
-  ShowButton,
   useModal,
 } from "@refinedev/antd";
 import { Table, Button, Tag, Select, Typography, Modal } from "antd";

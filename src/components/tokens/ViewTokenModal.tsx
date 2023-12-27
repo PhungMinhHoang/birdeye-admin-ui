@@ -1,21 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { SaveButton } from "@refinedev/antd";
-import {
-  Form,
-  Button,
-  Divider,
-  Flex,
-  Modal,
-  Space,
-  Tag,
-  Typography,
-  Input,
-  InputProps,
-} from "antd";
+import { Form, Button, Divider, Flex, Space, Input, InputProps } from "antd";
 import dayjs from "dayjs";
 import { LinkOutlined } from "@ant-design/icons";
+import { useUpdate } from "@refinedev/core";
 import { CopyButton } from "../elements/CopyButton";
-import { useCustom, useUpdate } from "@refinedev/core";
 
 type FormFieldData = {
   label: string;
@@ -83,9 +72,11 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "birdeyeTokenLink",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("birdeyeTokenLink")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() =>
+                window.open(form.getFieldValue("birdeyeTokenLink"))
+              }
+            />
           ),
         },
       },
@@ -102,9 +93,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "website",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("website")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("website"))}
+            />
           ),
         },
       },
@@ -121,9 +112,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "logoLink",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("logoLink")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("logoLink"))}
+            />
           ),
         },
       },
@@ -132,9 +123,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "coingeckoLink",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("coingeckoLink")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("coingeckoLink"))}
+            />
           ),
         },
       },
@@ -143,9 +134,11 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "coinmarketcapLink",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("coinmarketcapLink")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() =>
+                window.open(form.getFieldValue("coinmarketcapLink"))
+              }
+            />
           ),
         },
       },
@@ -154,9 +147,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "whitePaperLink",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("whitePaperLink")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("whitePaperLink"))}
+            />
           ),
         },
       },
@@ -165,9 +158,11 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "blockchainPlatform1",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("blockchainPlatform1")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() =>
+                window.open(form.getFieldValue("blockchainPlatform1"))
+              }
+            />
           ),
         },
       },
@@ -176,9 +171,11 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "blockchainPlatform2",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("blockchainPlatform2")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() =>
+                window.open(form.getFieldValue("blockchainPlatform2"))
+              }
+            />
           ),
         },
       },
@@ -187,9 +184,11 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "blockchainPlatform3",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("blockchainPlatform3")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() =>
+                window.open(form.getFieldValue("blockchainPlatform3"))
+              }
+            />
           ),
         },
       },
@@ -198,9 +197,11 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "blockchainPlatform4",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("blockchainPlatform4")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() =>
+                window.open(form.getFieldValue("blockchainPlatform4"))
+              }
+            />
           ),
         },
       },
@@ -209,9 +210,11 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "blockchainPlatform5",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("blockchainPlatform5")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() =>
+                window.open(form.getFieldValue("blockchainPlatform5"))
+              }
+            />
           ),
         },
       },
@@ -220,9 +223,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "twitter",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("twitter")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("twitter"))}
+            />
           ),
         },
       },
@@ -231,9 +234,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "discord",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("discord")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("discord"))}
+            />
           ),
         },
       },
@@ -242,9 +245,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "telegram",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("telegram")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("telegram"))}
+            />
           ),
         },
       },
@@ -253,9 +256,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "facebook",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("facebook")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("facebook"))}
+            />
           ),
         },
       },
@@ -264,9 +267,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "instagram",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("instagram")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("instagram"))}
+            />
           ),
         },
       },
@@ -275,9 +278,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "tiktok",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("tiktok")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("tiktok"))}
+            />
           ),
         },
       },
@@ -286,9 +289,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "medium",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("medium")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("medium"))}
+            />
           ),
         },
       },
@@ -297,9 +300,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "substack",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("substack")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("substack"))}
+            />
           ),
         },
       },
@@ -308,9 +311,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "reddit",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("reddit")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("reddit"))}
+            />
           ),
         },
       },
@@ -319,9 +322,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "github",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("github")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("github"))}
+            />
           ),
         },
       },
@@ -330,9 +333,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         name: "bitbucket",
         inputProps: {
           addonAfter: (
-            <a href={form.getFieldValue("bitbucket")} target="_blank">
-              <LinkOutlined />
-            </a>
+            <LinkOutlined
+              onClick={() => window.open(form.getFieldValue("bitbucket"))}
+            />
           ),
         },
       },
@@ -351,7 +354,7 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         },
       },
     ];
-  }, [token, form.getFieldsValue()]);
+  }, [token]);
 
   const [action, setAction] = useState("");
   const handleSubmit = (formValues: any) => {
@@ -391,7 +394,6 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
         },
         onError: (error, variables, context) => {
           // An error occurred!
-          debugger;
         },
       }
     );
@@ -411,19 +413,10 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
 
       <Divider />
 
-      <Flex justify="space-between" style={{ marginTop: "16px" }}>
-        {(token.status === "Pending" || token.status === "Verified") && (
-          <Button
-            type="default"
-            htmlType="submit"
-            danger
-            loading={action === "Refuse" && isLoading}
-            onClick={() => setAction("Refuse")}
-          >
-            Refuse
-          </Button>
-        )}
-
+      <Flex
+        justify="space-between"
+        style={{ marginTop: "16px", flexDirection: "row-reverse" }}
+      >
         <Space size="middle">
           <SaveButton
             type="primary"
@@ -443,6 +436,18 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
             Update DB
           </SaveButton>
         </Space>
+
+        {(token.status === "Pending" || token.status === "Verified") && (
+          <Button
+            type="default"
+            htmlType="submit"
+            danger
+            loading={action === "Refuse" && isLoading}
+            onClick={() => setAction("Refuse")}
+          >
+            Refuse
+          </Button>
+        )}
       </Flex>
     </Form>
   );
