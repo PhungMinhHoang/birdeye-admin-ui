@@ -76,7 +76,7 @@ export default (
   },
 
   update: async ({ resource, id, variables }) => {
-    const url = `${apiUrl}/${resource}?id=${id}`;
+    const url = `${apiUrl}/${resource}/${id}`;
 
     try {
       const { data } = await httpClient.put(url, variables);

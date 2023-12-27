@@ -367,8 +367,8 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
       case "Update":
         resource = "token/update-info-requests/update-to-birdeye-app";
         break;
-      case "Refuse":
-        resource = "token/update-info-requests/refuse";
+      case "Reject":
+        resource = "token/update-info-requests/reject";
         break;
       default:
         break;
@@ -442,10 +442,10 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
             type="default"
             htmlType="submit"
             danger
-            loading={action === "Refuse" && isLoading}
-            onClick={() => setAction("Refuse")}
+            loading={action === "Reject" && isLoading}
+            onClick={() => setAction("Reject")}
           >
-            Refuse
+            Reject
           </Button>
         )}
       </Flex>

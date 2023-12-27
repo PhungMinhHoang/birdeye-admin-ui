@@ -39,7 +39,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
         return "warning";
       case "Updated":
         return "success";
-      case "Refused":
+      case "Rejected":
         return "error";
       default:
         break;
@@ -50,7 +50,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
     { value: "Pending", label: "Pending" },
     { value: "Verified", label: "Verified" },
     { value: "Updated", label: "Updated" },
-    { value: "Refused", label: "Refused" },
+    { value: "Rejected", label: "Rejected" },
   ];
 
   const {

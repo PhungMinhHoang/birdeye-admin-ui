@@ -43,7 +43,7 @@ import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import { CustomerList } from "./pages/customers";
-import { TokenList, TokenShow } from "./pages/tokens";
+import { TokenList } from "./pages/tokens";
 import { CustomerShow } from "./pages/customers";
 import { RewardList, RewardCreate } from "./pages/rewards";
 import { UserList } from "./pages/users";
@@ -161,11 +161,12 @@ function App() {
                   >
                     <Route
                       index
-                      element={<NavigateToResource resource="token/update-info-requests" />}
+                      element={
+                        <NavigateToResource resource="token/update-info-requests" />
+                      }
                     />
                     <Route path="/token/update-info-requests">
                       <Route index element={<TokenList />} />
-                      <Route path=":id" element={<TokenShow />} />
                     </Route>
                     <Route path="/customers">
                       <Route index element={<CustomerList />} />
