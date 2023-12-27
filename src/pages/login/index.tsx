@@ -66,10 +66,6 @@ export const Login: React.FC = () => {
                 form={form}
                 onFinish={handleLogin}
                 requiredMark={false}
-                initialValues={{
-                  username: "khanguyen",
-                  password: "birdeyeso",
-                }}
               >
                 <Form.Item
                   name="username"

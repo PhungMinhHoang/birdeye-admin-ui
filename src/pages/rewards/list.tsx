@@ -26,8 +26,6 @@ import {
   Flex,
   Typography,
 } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { CreateModal } from "../../components/rewards/CreateModal";
 
 const RegistrationList: React.FC<any> = ({ reward }: { reward: any }) => {
   const { tableProps, setFilters } = useTable({
