@@ -4,7 +4,13 @@ import {
   BaseRecord,
   useTranslate,
 } from "@refinedev/core";
-import { useTable, List, DateField, EditButton } from "@refinedev/antd";
+import {
+  useTable,
+  List,
+  DateField,
+  EditButton,
+  DeleteButton,
+} from "@refinedev/antd";
 import { Table, Space } from "antd";
 
 type Role = {
@@ -37,7 +43,9 @@ export const RoleList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
             <Space>
-              <EditButton hideText recordItemId={record.id}></EditButton>
+              <EditButton hideText recordItemId={record._id}></EditButton>
+
+              <DeleteButton hideText recordItemId={record._id}></DeleteButton>
             </Space>
           )}
         />
