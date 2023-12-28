@@ -7,9 +7,15 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 
-import { Authenticated, Refine } from "@refinedev/core";
+import { Authenticated, CanAccess, Refine, useCan } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
@@ -32,7 +38,7 @@ import customDataProvider from "./providers/dataProvider";
 import { accessControlProvider } from "./providers/accessControlProvider";
 
 import axiosInstance from "./axios";
-import { $permissions } from "./constants";
+import { $permissions, USER_INFO } from "./constants";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 
 import { CustomSider } from "./components/sider";
@@ -48,6 +54,7 @@ import { CustomerShow } from "./pages/customers";
 import { RewardList, RewardCreate } from "./pages/rewards";
 import { UserList } from "./pages/users";
 import { RoleList, RoleCreate, RoleEdit } from "./pages/roles";
+import { useEffect, useState } from "react";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -60,6 +67,87 @@ function App() {
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
     getLocale: () => i18n.language,
   };
+
+  const resources = [
+    {
+      name: "token/update-info-requests",
+      list: "/token/update-info-requests",
+      meta: {
+        label: "Update token info",
+        icon: <DollarOutlined />,
+        authority: {
+          list: $permissions.VIEW_TOKEN_INFO_REQUEST,
+        },
+      },
+    },
+    {
+      name: "customers",
+      list: "/customers",
+      edit: "/customers/:id",
+      show: "/customers/:id",
+      meta: {
+        label: "Update customer role",
+        icon: <UserOutlined />,
+      },
+    },
+    {
+      name: "rewards",
+      list: "/rewards",
+      create: "/rewards/create",
+      icon: <GiftOutlined />,
+    },
+    {
+      name: "admins",
+      list: "/admins",
+      icon: <UserAddOutlined />,
+      meta: {
+        authority: {
+          list: $permissions.VIEW_ADMIN,
+          create: $permissions.CREATE_ADMIN,
+          edit: $permissions.UPDATE_ADMIN,
+          delete: $permissions.DELETE_ADMIN,
+        },
+      },
+    },
+    {
+      name: "roles",
+      list: "/roles",
+      create: "/roles/create",
+      edit: "/roles/:id",
+      icon: <SettingOutlined />,
+      meta: {
+        authority: {
+          list: $permissions.VIEW_ROLE,
+          create: $permissions.CREATE_ROLE,
+          edit: $permissions.UPDATE_ROLE,
+          delete: $permissions.DELETE_ROLE,
+        },
+      },
+    },
+  ];
+
+  const [fallbackIndexRoute, setFallbackIndexRoute] = useState("");
+
+  const getFallback = async () => {
+    if (localStorage.getItem(USER_INFO)) {
+      for (const resource of resources) {
+        const check = await accessControlProvider.can({
+          resource: resource.name,
+          action: "list",
+          params: { resource },
+        });
+
+        if (check.can) {
+          setFallbackIndexRoute(resource.list);
+          return;
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    getFallback();
+  }, []);
 
   return (
     <BrowserRouter>
@@ -74,63 +162,7 @@ function App() {
                 i18nProvider={i18nProvider}
                 routerProvider={routerBindings}
                 accessControlProvider={accessControlProvider}
-                resources={[
-                  {
-                    name: "token/update-info-requests",
-                    list: "/token/update-info-requests",
-                    meta: {
-                      label: "Update token info",
-                      icon: <DollarOutlined />,
-                      authority: {
-                        list: $permissions.VIEW_TOKEN_INFO_REQUEST,
-                      },
-                    },
-                  },
-                  {
-                    name: "customers",
-                    list: "/customers",
-                    edit: "/customers/:id",
-                    show: "/customers/:id",
-                    meta: {
-                      label: "Update customer role",
-                      icon: <UserOutlined />,
-                    },
-                  },
-                  {
-                    name: "rewards",
-                    list: "/rewards",
-                    create: "/rewards/create",
-                    icon: <GiftOutlined />,
-                  },
-                  {
-                    name: "admins",
-                    list: "/admins",
-                    icon: <UserAddOutlined />,
-                    meta: {
-                      authority: {
-                        list: $permissions.VIEW_ADMIN,
-                        create: $permissions.CREATE_ADMIN,
-                        edit: $permissions.UPDATE_ADMIN,
-                        delete: $permissions.DELETE_ADMIN,
-                      },
-                    },
-                  },
-                  {
-                    name: "roles",
-                    list: "/roles",
-                    create: "/roles/create",
-                    edit: "/roles/:id",
-                    icon: <SettingOutlined />,
-                    meta: {
-                      authority: {
-                        list: $permissions.VIEW_ROLE,
-                        create: $permissions.CREATE_ROLE,
-                        edit: $permissions.UPDATE_ROLE,
-                        delete: $permissions.DELETE_ROLE,
-                      },
-                    },
-                  },
-                ]}
+                resources={resources}
                 options={{
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: false,
@@ -164,30 +196,40 @@ function App() {
                     <Route
                       index
                       element={
-                        <NavigateToResource resource="token/update-info-requests" />
+                        <Navigate to={fallbackIndexRoute} />
+                        //  <NavigateToResource resource={"admins"} />
                       }
                     />
-                    <Route path="/token/update-info-requests">
-                      <Route index element={<TokenList />} />
+
+                    <Route
+                      element={
+                        <CanAccess fallback={<div>Unauthorized!</div>}>
+                          <Outlet />
+                        </CanAccess>
+                      }
+                    >
+                      <Route path="/token/update-info-requests">
+                        <Route index element={<TokenList />} />
+                      </Route>
+                      <Route path="/customers">
+                        <Route index element={<CustomerList />} />
+                        <Route path=":id" element={<CustomerShow />} />
+                      </Route>
+                      <Route path="/rewards">
+                        <Route index element={<RewardList />} />
+                        <Route path="create" element={<RewardCreate />} />
+                        {/* <Route path=":id" element={<CustomerShow />} /> */}
+                      </Route>
+                      <Route path="/admins">
+                        <Route index element={<UserList />} />
+                      </Route>
+                      <Route path="/roles">
+                        <Route index element={<RoleList />} />
+                        <Route path="create" element={<RoleCreate />} />
+                        <Route path=":id" element={<RoleEdit />} />
+                      </Route>
+                      <Route path="*" element={<ErrorComponent />} />
                     </Route>
-                    <Route path="/customers">
-                      <Route index element={<CustomerList />} />
-                      <Route path=":id" element={<CustomerShow />} />
-                    </Route>
-                    <Route path="/rewards">
-                      <Route index element={<RewardList />} />
-                      <Route path="create" element={<RewardCreate />} />
-                      {/* <Route path=":id" element={<CustomerShow />} /> */}
-                    </Route>
-                    <Route path="/admins">
-                      <Route index element={<UserList />} />
-                    </Route>
-                    <Route path="/roles">
-                      <Route index element={<RoleList />} />
-                      <Route path="create" element={<RoleCreate />} />
-                      <Route path=":id" element={<RoleEdit />} />
-                    </Route>
-                    <Route path="*" element={<ErrorComponent />} />
                   </Route>
 
                   <Route
@@ -196,7 +238,8 @@ function App() {
                         key="authenticated-outer"
                         fallback={<Outlet />}
                       >
-                        <NavigateToResource />
+                        <Navigate to={fallbackIndexRoute} />
+                        {/* <NavigateToResource resource={fallbackIndexRoute}/> */}
                       </Authenticated>
                     }
                   >
