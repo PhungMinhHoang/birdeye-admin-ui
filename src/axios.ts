@@ -38,6 +38,8 @@ const refreshAuthLogic = async () => {
   const oldToken = localStorage.getItem(TOKEN_KEY);
   const token = localStorage.getItem(REFRESH_TOKEN_KEY);
 
+  if (!token) return Promise.reject();
+
   try {
     const response = await axiosRefreshInstance.post(
       "/auth/refresh-token",
@@ -65,7 +67,9 @@ const refreshFailLogic = () => {
   localStorage.removeItem(REFRESH_TOKEN_KEY);
   localStorage.removeItem(USER_INFO);
 
-  window.location.href = "/login";
+  if (window.location.href != "/login") {
+    window.location.href = "/login";
+  }
   return Promise.resolve();
 };
 
