@@ -35,12 +35,21 @@ axiosInstance.interceptors.response.use(
 
 // Function that will be called to refresh authorization
 const refreshAuthLogic = async () => {
+  const oldToken = localStorage.getItem(TOKEN_KEY);
   const token = localStorage.getItem(REFRESH_TOKEN_KEY);
 
   try {
-    const response = await axiosRefreshInstance.post("/auth/refresh-token", {
-      token,
-    });
+    const response = await axiosRefreshInstance.post(
+      "/auth/refresh-token",
+      {
+        token,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${oldToken}`,
+        },
+      }
+    );
 
     const { accessToken, refreshToken } = response.data;
     localStorage.setItem(TOKEN_KEY, accessToken);
