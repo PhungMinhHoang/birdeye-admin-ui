@@ -52,8 +52,7 @@ import { RoleList, RoleCreate } from "./pages/roles";
 function App() {
   const { t, i18n } = useTranslation();
 
-  //const API_URL = "https://api.fake-rest.refine.dev";
-  const API_URL = "https://internal.birdeye.so";
+  const API_URL = import.meta.env.VITE_API_URL || "";
   const dataProvider = customDataProvider(API_URL, axiosInstance);
 
   const i18nProvider = {

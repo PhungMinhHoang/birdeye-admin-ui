@@ -1,13 +1,13 @@
 import { HttpError } from "@refinedev/core";
-import axios, { type AxiosResponse } from "axios";
+import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { REFRESH_TOKEN_KEY, TOKEN_KEY, USER_INFO } from "./constants";
 
 const axiosInstance = axios.create({
-  baseURL: "https://internal.birdeye.so",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 const axiosRefreshInstance = axios.create({
-  baseURL: "https://internal.birdeye.so",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 // Use interceptor to inject the token to requests
