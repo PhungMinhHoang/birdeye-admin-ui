@@ -47,7 +47,7 @@ import { TokenList } from "./pages/tokens";
 import { CustomerShow } from "./pages/customers";
 import { RewardList, RewardCreate } from "./pages/rewards";
 import { UserList } from "./pages/users";
-import { RoleList, RoleCreate } from "./pages/roles";
+import { RoleList, RoleCreate, RoleEdit } from "./pages/roles";
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -119,6 +119,7 @@ function App() {
                     name: "roles",
                     list: "/roles",
                     create: "/roles/create",
+                    edit: "/roles/:id",
                     icon: <SettingOutlined />,
                     meta: {
                       authority: {
@@ -184,6 +185,7 @@ function App() {
                     <Route path="/roles">
                       <Route index element={<RoleList />} />
                       <Route path="create" element={<RoleCreate />} />
+                      <Route path=":id" element={<RoleEdit />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>

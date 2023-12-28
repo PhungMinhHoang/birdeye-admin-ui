@@ -45,20 +45,20 @@ export const usePermission = () => {
       }
 
       const resourceObj = {
-        vModel: resource,
+        resource,
         resourceName,
         updatedAt,
       };
 
       if (action) {
         if (
-          !groupObj.resources.some((child: any) => child.vModel === resource)
+          !groupObj.resources.some((child: any) => child.resource === resource)
         ) {
           groupObj.resources.push({ ...resourceObj, options: [] });
         }
 
         const resourceChildren = groupObj.resources.find(
-          (child: any) => child.vModel === resource
+          (child: any) => child.resource === resource
         ).options;
 
         resourceChildren.push({

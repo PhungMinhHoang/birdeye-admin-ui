@@ -25,7 +25,7 @@ export type Permission = {
 
 export type DataPermissionResult = {
   group: string;
-  id: string;
+  _id: string;
   groupName: string;
   lastModifiedDate: number;
   resources: Array<Resource>;
@@ -33,7 +33,7 @@ export type DataPermissionResult = {
 };
 
 export type Resource = {
-  vModel: string;
+  resource: string;
   resourceName: string;
   lastModifiedDate: number;
   options: Array<OptionsAction>;

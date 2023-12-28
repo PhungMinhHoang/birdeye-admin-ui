@@ -1,5 +1,5 @@
 import { BaseRecord, IResourceComponentsProps, useList } from "@refinedev/core";
-import { Create, useForm } from "@refinedev/antd";
+import { Create, Edit, useForm } from "@refinedev/antd";
 import { Card, Checkbox, Form, Input, Select } from "antd";
 import { usePermission } from "../../hooks";
 import { Permission, Resource } from "../../types";
@@ -10,7 +10,7 @@ type RoleType = {
   permissions: string[];
 };
 
-export const RoleCreate: React.FC<IResourceComponentsProps> = () => {
+export const RoleEdit: React.FC<IResourceComponentsProps> = () => {
   const { formProps, saveButtonProps, formLoading, form, onFinish } = useForm({
     resource: "roles",
   });
@@ -49,8 +49,9 @@ export const RoleCreate: React.FC<IResourceComponentsProps> = () => {
   };
 
   return (
-    <Create
+    <Edit
       isLoading={isLoading}
+      // headerButtons={() => <></>}
       saveButtonProps={{ loading: formLoading, ...saveButtonProps }}
     >
       <Form
@@ -99,6 +100,6 @@ export const RoleCreate: React.FC<IResourceComponentsProps> = () => {
           </Card>
         ))}
       </Form>
-    </Create>
+    </Edit>
   );
 };
