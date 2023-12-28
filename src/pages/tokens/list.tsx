@@ -65,7 +65,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
       maskClosable: false,
     },
   });
-  const [token, setToken] = useState<BaseRecord>();
+  const [token, setToken] = useState<BaseRecord>({});
   const handleView = (record: BaseRecord) => {
     setToken(record);
     showViewModal();
@@ -139,7 +139,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
         />
       </Table>
 
-      <Modal {...viewModalProps}>
+      <Modal {...viewModalProps} forceRender>
         <ViewTokenModal token={token} onSuccess={onUpdateInfoSuccess} />
       </Modal>
     </List>
