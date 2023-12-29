@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLogin } from "@refinedev/core";
+import React from "react";
+import { useLogin, useResource } from "@refinedev/core";
 import {
   Row,
   Col,
@@ -9,7 +9,6 @@ import {
   Form,
   Input,
   Button,
-  Checkbox,
 } from "antd";
 import "./styles.css";
 import { AppIcon } from "../../components/app-icon";
@@ -23,21 +22,11 @@ export interface ILoginForm {
 
 export const Login: React.FC = () => {
   const [form] = Form.useForm<ILoginForm>();
-  const [loading, setLoading] = useState(false);
+  const { mutate: login, isLoading } = useLogin();
+  const {resources} = useResource();
 
-  const { mutate: login } = useLogin<ILoginForm>();
-
-  const handleLogin = (values: ILoginForm) => {
-    setLoading(true);
-
-    login(values, {
-      onSuccess() {
-        setLoading(false);
-      },
-      onError() {
-        setLoading(false);
-      },
-    });
+  const handleLogin = (formValues: ILoginForm) => {
+    login({...formValues, resources});
   };
 
   const CardTitle = (
@@ -88,7 +77,7 @@ export const Login: React.FC = () => {
                   type="primary"
                   size="large"
                   htmlType="submit"
-                  loading={loading}
+                  loading={isLoading}
                   style={{ marginTop: "16px" }}
                 >
                   Sign in

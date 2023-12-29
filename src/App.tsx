@@ -33,12 +33,11 @@ import {
 } from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
 
-import { authProvider } from "./providers/authProvider";
+import { authProvider, accessControlProvider, findFallbackIndexRoute } from "./providers/authProvider";
 import customDataProvider from "./providers/dataProvider";
-import { accessControlProvider } from "./providers/accessControlProvider";
 
 import axiosInstance from "./axios";
-import { $permissions, USER_INFO } from "./constants";
+import { $permissions } from "./constants";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 
 import { CustomSider } from "./components/sider";
@@ -128,25 +127,8 @@ function App() {
 
   const [fallbackIndexRoute, setFallbackIndexRoute] = useState("");
 
-  const getFallback = async () => {
-    if (localStorage.getItem(USER_INFO)) {
-      for (const resource of resources) {
-        const check = await accessControlProvider.can({
-          resource: resource.name,
-          action: "list",
-          params: { resource },
-        });
-
-        if (check.can) {
-          setFallbackIndexRoute(resource.list);
-          return;
-        }
-      }
-    }
-  };
-
   useEffect(() => {
-    getFallback();
+    setFallbackIndexRoute(findFallbackIndexRoute(resources))
   }, []);
 
   return (
@@ -203,7 +185,7 @@ function App() {
 
                     <Route
                       element={
-                        <CanAccess fallback={<div>Unauthorized!</div>}>
+                        <CanAccess fallback={<ErrorComponent />}>
                           <Outlet />
                         </CanAccess>
                       }
