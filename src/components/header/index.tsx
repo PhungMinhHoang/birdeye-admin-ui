@@ -1,4 +1,4 @@
-import { DownOutlined, LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined } from "@ant-design/icons";
 import type { RefineThemedLayoutV2HeaderProps } from "@refinedev/antd";
 import {
   useActiveAuthProvider,
@@ -10,18 +10,16 @@ import {
   useWarnAboutChange,
 } from "@refinedev/core";
 import {
-  Avatar,
-  Button,
   Dropdown,
   Layout as AntdLayout,
   MenuProps,
   Space,
-  Switch,
   theme,
   Typography,
 } from "antd";
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient, QueryClient } from "@tanstack/react-query";
 import { ColorModeContext } from "../../contexts/color-mode";
 
 const { Text } = Typography;
@@ -41,6 +39,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   const changeLanguage = useSetLocale();
   const { data: user } = useGetIdentity<IUser>();
   const { mode, setMode } = useContext(ColorModeContext);
+  const queryClient = useQueryClient();
 
   const currentLocale = locale();
 
@@ -59,7 +58,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
 
   const { warnWhen, setWarnWhen } = useWarnAboutChange();
   const authProvider = useActiveAuthProvider();
-  const { mutate: mutateLogout } = useLogout({
+  const { mutate: mutateLogout } = useLogout<{ queryClient: QueryClient }>({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
   const translate = useTranslate();
@@ -74,10 +73,10 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
 
       if (confirm) {
         setWarnWhen(false);
-        mutateLogout();
+        mutateLogout({ queryClient });
       }
     } else {
-      mutateLogout();
+      mutateLogout({ queryClient });
     }
   };
 

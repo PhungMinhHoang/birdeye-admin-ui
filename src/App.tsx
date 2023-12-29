@@ -15,14 +15,13 @@ import {
   Routes,
 } from "react-router-dom";
 
-import { Authenticated, CanAccess, Refine, useCan } from "@refinedev/core";
+import { Authenticated, CanAccess, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import { AntdInferencer } from "@refinedev/inferencer/antd"; // Component for auto-generate crud
 import routerBindings, {
   CatchAllNavigate,
   DocumentTitleHandler,
-  NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import {

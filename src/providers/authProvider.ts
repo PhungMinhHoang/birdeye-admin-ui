@@ -1,9 +1,14 @@
 import { AuthBindings, CanReturnType, IResourceItem } from "@refinedev/core";
 import { AccessControlProvider } from "@refinedev/core";
+import { QueryClient } from "@tanstack/react-query";
 import axios from "../axios";
 import { USER_INFO, REFRESH_TOKEN_KEY, TOKEN_KEY } from "../constants";
 import type { User } from "../types";
 
+/**
+ * Get all authorities of current user
+ * @returns 
+ */
 const getPermissions = () => {
   if (localStorage.getItem(USER_INFO)) {
     const user = JSON.parse(localStorage.getItem(USER_INFO) as string) as User;
@@ -17,6 +22,11 @@ const getPermissions = () => {
   return [];
 };
 
+/**
+ * Check authority of current user
+ * @param authority 
+ * @returns 
+ */
 const checkAuthority = (authority: string): CanReturnType => {
   if (!authority) {
     return {
@@ -73,10 +83,15 @@ const checkAuthority = (authority: string): CanReturnType => {
   };
 };
 
-export const findFallbackIndexRoute =  (resources: IResourceItem[]) => {
+/**
+ * This function to find the first route that user has authority to redirect from "/"
+ * @param resources 
+ * @returns path of route to redirect
+ */
+export const findFallbackIndexRoute = (resources: IResourceItem[]) => {
   if (localStorage.getItem(USER_INFO)) {
     for (const resource of resources) {
-      const check = checkAuthority(resource.meta?.authority?.list)
+      const check = checkAuthority(resource.meta?.authority?.list);
 
       if (check.can) {
         return resource.list as string;
@@ -84,7 +99,7 @@ export const findFallbackIndexRoute =  (resources: IResourceItem[]) => {
     }
   }
 
-  return "/"
+  return "/";
 };
 
 export const authProvider: AuthBindings = {
@@ -123,10 +138,11 @@ export const authProvider: AuthBindings = {
       };
     }
   },
-  logout: async () => {
+  logout: async ({ queryClient }: { queryClient: QueryClient }) => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(USER_INFO);
+    queryClient.removeQueries();
 
     return {
       success: true,

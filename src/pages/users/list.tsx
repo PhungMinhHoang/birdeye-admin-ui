@@ -1,23 +1,21 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo } from "react";
 import {
   IResourceComponentsProps,
   BaseRecord,
   useTranslate,
-  getDefaultFilter,
   useList,
-  useDelete,
+  useCan,
 } from "@refinedev/core";
 import {
   useTable,
   List,
   DateField,
-  EditButton,
-  ShowButton,
   DeleteButton,
   useModal,
   useForm,
 } from "@refinedev/antd";
 import { Table, Space, Form, Input, Modal, Select } from "antd";
+import { $permissions } from "../../constants";
 
 type Role = {
   _id: string;
@@ -27,12 +25,21 @@ type Role = {
 export const UserList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
 
-  const { tableProps, setFilters } = useTable({
+  const { tableProps } = useTable({
     syncWithLocation: true,
+  });
+
+  const { data: canAccessRole } = useCan({
+    resource: "roles",
+    action: "list",
+    params: { authority: $permissions.VIEW_ROLE },
   });
 
   const { data: roles } = useList<Role>({
     resource: "roles",
+    queryOptions: {
+      enabled: canAccessRole?.can === true,
+    },
   });
 
   const roleOptionSelect = useMemo(() => {
