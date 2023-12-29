@@ -44,7 +44,7 @@ export const CustomerList: React.FC<IResourceComponentsProps> = () => {
           </Form.Item>
         </Space>
       </Form>
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="_id">
         <Table.Column dataIndex="email" title="Email" />
         <Table.Column
           dataIndex="signedUp"

@@ -78,7 +78,7 @@ export const TokenList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <List title="TOKEN INFO UPDATE REQUESTS">
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="_id">
         <Table.Column
           dataIndex="status"
           title={translate("tokens.fields.status")}

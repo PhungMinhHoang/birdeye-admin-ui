@@ -21,13 +21,13 @@ type Role = {
 export const RoleList: React.FC<IResourceComponentsProps> = () => {
   const translate = useTranslate();
 
-  const { tableProps, setFilters } = useTable({
+  const { tableProps } = useTable({
     syncWithLocation: true,
   });
 
   return (
     <List>
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="_id">
         <Table.Column dataIndex="name" title="Role name"></Table.Column>
 
         <Table.Column

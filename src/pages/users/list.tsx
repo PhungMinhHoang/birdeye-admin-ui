@@ -83,10 +83,9 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     action: "create",
     onMutationSuccess: handleCloseModal,
   });
-
   return (
     <List canCreate createButtonProps={{ onClick: showModal }}>
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="_id">
         <Table.Column dataIndex="username" title="Username"></Table.Column>
 
         <Table.Column
@@ -108,8 +107,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
             <Space>
-              {/* <EditButton icon={false} recordItemId={record.id}></EditButton> */}
-
               {!record.isSystemAdmin && (
                 <DeleteButton hideText recordItemId={record._id}></DeleteButton>
               )}

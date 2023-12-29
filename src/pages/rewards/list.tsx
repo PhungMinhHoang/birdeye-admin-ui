@@ -51,7 +51,7 @@ const RegistrationList: React.FC<any> = ({ reward }: { reward: any }) => {
         <Button type="primary">Download CSV</Button>
       </Flex>
 
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="_id">
         <Table.Column dataIndex="email" title="Email"></Table.Column>
         <Table.Column
           dataIndex="wallet"
@@ -118,7 +118,7 @@ export const RewardList: React.FC<IResourceComponentsProps> = () => {
         </Space>
       </Form>
 
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="_id">
         <Table.Column dataIndex="name" title="Name"></Table.Column>
         <Table.Column dataIndex="offeredBy" title="Offered by"></Table.Column>
         <Table.Column dataIndex="type" title="Type"></Table.Column>
