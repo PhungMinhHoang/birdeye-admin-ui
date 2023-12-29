@@ -26,7 +26,9 @@ export const Login: React.FC = () => {
   const {resources} = useResource();
 
   const handleLogin = (formValues: ILoginForm) => {
-    login({...formValues, resources});
+    const routeData = resources.map(resource => ({path: resource.list, authority: resource.meta?.authority?.list}))
+
+    login({...formValues, routeData});
   };
 
   const CardTitle = (

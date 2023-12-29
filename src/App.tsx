@@ -127,7 +127,8 @@ function App() {
   const [fallbackIndexRoute, setFallbackIndexRoute] = useState("");
 
   useEffect(() => {
-    setFallbackIndexRoute(findFallbackIndexRoute(resources))
+    const routeData = resources.map(resource => ({path: resource.list, authority: resource.meta?.authority?.list}))
+    setFallbackIndexRoute(findFallbackIndexRoute(routeData))
   }, []);
 
   return (
@@ -156,7 +157,7 @@ function App() {
                     element={
                       <Authenticated
                         key="authenticated-inner"
-                        fallback={<CatchAllNavigate to="/login" />}
+                        fallback={<Navigate to="/login" />}
                       >
                         <ThemedLayoutV2
                           Header={() => <Header sticky />}

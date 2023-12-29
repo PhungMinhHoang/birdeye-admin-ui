@@ -1,13 +1,12 @@
-import { AuthBindings, CanReturnType, IResourceItem } from "@refinedev/core";
+import { AuthBindings, CanReturnType } from "@refinedev/core";
 import { AccessControlProvider } from "@refinedev/core";
-import { QueryClient } from "@tanstack/react-query";
 import axios from "../axios";
 import { USER_INFO, REFRESH_TOKEN_KEY, TOKEN_KEY } from "../constants";
-import type { User } from "../types";
+import type { LoginParams, User } from "../types";
 
 /**
  * Get all authorities of current user
- * @returns 
+ * @returns
  */
 const getPermissions = () => {
   if (localStorage.getItem(USER_INFO)) {
@@ -24,10 +23,10 @@ const getPermissions = () => {
 
 /**
  * Check authority of current user
- * @param authority 
- * @returns 
+ * @param authority
+ * @returns
  */
-const checkAuthority = (authority: string): CanReturnType => {
+const checkAuthority = (authority?: string): CanReturnType => {
   if (!authority) {
     return {
       can: false,
@@ -85,17 +84,20 @@ const checkAuthority = (authority: string): CanReturnType => {
 
 /**
  * This function to find the first route that user has authority to redirect from "/"
- * @param resources 
+ * @param routeData
  * @returns path of route to redirect
  */
-export const findFallbackIndexRoute = (resources: IResourceItem[]) => {
-  if (localStorage.getItem(USER_INFO)) {
-    for (const resource of resources) {
-      const check = checkAuthority(resource.meta?.authority?.list);
+export const findFallbackIndexRoute = (
+  routeData: Array<{
+    path: string;
+    authority?: string;
+  }>
+) => {
+  for (const route of routeData) {
+    const check = checkAuthority(route.authority);
 
-      if (check.can) {
-        return resource.list as string;
-      }
+    if (check.can) {
+      return route.path;
     }
   }
 
@@ -103,7 +105,7 @@ export const findFallbackIndexRoute = (resources: IResourceItem[]) => {
 };
 
 export const authProvider: AuthBindings = {
-  login: async ({ username, password, resources }) => {
+  login: async ({ username, password, routeData }: LoginParams) => {
     try {
       const response = await axios.post("/auth/login", {
         username,
@@ -123,10 +125,10 @@ export const authProvider: AuthBindings = {
       } catch (error) {
         console.log("Fetching user info error: ", error);
       }
-
+      
       return {
         success: true,
-        redirectTo: findFallbackIndexRoute(resources),
+        redirectTo: findFallbackIndexRoute(routeData),
       };
     } catch (error) {
       return {
@@ -138,15 +140,13 @@ export const authProvider: AuthBindings = {
       };
     }
   },
-  logout: async ({ queryClient }: { queryClient: QueryClient }) => {
+  logout: async () => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(USER_INFO);
-    queryClient.removeQueries();
 
     return {
       success: true,
-      redirectTo: "/login",
     };
   },
   check: async () => {

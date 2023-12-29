@@ -58,26 +58,32 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
 
   const { warnWhen, setWarnWhen } = useWarnAboutChange();
   const authProvider = useActiveAuthProvider();
-  const { mutate: mutateLogout } = useLogout<{ queryClient: QueryClient }>({
+  const { mutate: mutateLogout } = useLogout<any>({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
   const translate = useTranslate();
   const handleLogout = () => {
-    if (warnWhen) {
-      const confirm = window.confirm(
-        translate(
-          "warnWhenUnsavedChanges",
-          "Are you sure you want to leave? You have unsaved changes."
-        )
-      );
+    // if (warnWhen) {
+    //   const confirm = window.confirm(
+    //     translate(
+    //       "warnWhenUnsavedChanges",
+    //       "Are you sure you want to leave? You have unsaved changes."
+    //     )
+    //   );
 
-      if (confirm) {
-        setWarnWhen(false);
-        mutateLogout({ queryClient });
+    //   if (confirm) {
+    //     setWarnWhen(false);
+    //     mutateLogout();
+    //   }
+    // } else {
+    //   mutateLogout();
+    // }
+
+    mutateLogout({}, {
+      onSuccess: () => {
+        queryClient.removeQueries()
       }
-    } else {
-      mutateLogout({ queryClient });
-    }
+    })
   };
 
   const userMenuItems: MenuProps["items"] = [

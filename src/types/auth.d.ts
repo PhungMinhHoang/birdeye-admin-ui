@@ -44,3 +44,12 @@ export type OptionsAction = Option & {
   value: string;
   action?: string;
 };
+
+export type LoginParams = {
+  username: string;
+  password: string;
+  routeData: Array<{
+    path: string;
+    authority: string;
+  }>;
+};
