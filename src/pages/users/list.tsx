@@ -111,11 +111,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
               {/* <EditButton icon={false} recordItemId={record.id}></EditButton> */}
 
               {!record.isSystemAdmin && (
-                <DeleteButton
-                  hideText
-                  recordItemId={record._id}
-                  disabled={record.isSystemAdmin}
-                ></DeleteButton>
+                <DeleteButton hideText recordItemId={record._id}></DeleteButton>
               )}
             </Space>
           )}
