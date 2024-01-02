@@ -132,6 +132,9 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
     {
       label: "Project Introduction Text",
       name: "description",
+      inputProps: {
+        readOnly: true,
+      },
     },
     {
       label: "Logo Link",
