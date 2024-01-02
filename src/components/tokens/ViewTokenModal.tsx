@@ -24,6 +24,8 @@ const ViewTokenModal: React.FC<Props> = ({ token, onSuccess }) => {
   const [action, setAction] = useState("");
 
   useEffect(() => {
+    form.resetFields(); // Reset data of old form before set new data
+
     form.setFieldsValue({
       ...token,
       updatedAt: dayjs(token.updatedAt).format("D/M/YYYY hh:mm:ss"),
